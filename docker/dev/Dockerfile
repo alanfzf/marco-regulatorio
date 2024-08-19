@@ -62,6 +62,7 @@ EXPOSE 80 5173
 COPY --chmod=0755 entry-php.sh .
 COPY --chmod=0755 entry-queue.sh .
 COPY --chmod=0755 entry-node.sh .
+COPY --chmod=0755 entry-nvim.sh .
 
 WORKDIR /var/www/
 
@@ -69,4 +70,4 @@ WORKDIR /var/www/
 ENTRYPOINT ["bash", "-c"]
 
 # Prepare to startup the container
-CMD ["$WORK_DIR/entry-php.sh"]
+CMD ["/opt/scripts/entry-php.sh"]
