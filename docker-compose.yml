@@ -1,0 +1,46 @@
+services:
+  # LARAVEL CONTAINER
+  laravel: &laravel
+    image: alanfzf/laravel-dev:latest
+    tty: true
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    environment:
+      GIT_REPO: ${LARAVEL_REPO}
+      GIT_TOKEN: ${GIT_TOKEN}
+    volumes:
+      - laravel:/var/www/${LARAVEL_REPO}
+    networks:
+      - marco-regulatorio
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/fs_ok.lock"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  # QUEUE CONTAINER
+  queue:
+    <<: *laravel
+    ports: []
+    restart: on-failure
+    command: ["/opt/scripts/entry-queue.sh"]
+    healthcheck:
+      test: []
+    depends_on:
+      laravel:
+        condition: service_healthy
+  vite:
+    <<: *laravel
+    ports:
+      - "5173:5173"
+    command: ["/opt/scripts/entry-node.sh"]
+    healthcheck:
+      test: []
+    depends_on:
+      laravel:
+          condition: service_healthy
+networks:
+  marco-regulatorio:
+volumes:
+  laravel:
