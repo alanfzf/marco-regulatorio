@@ -12,6 +12,7 @@ services:
       GIT_TOKEN: ${GIT_TOKEN}
     volumes:
       - laravel:/var/www/${LARAVEL_REPO}
+      - ./database/database.sqlite:/var/www/${LARAVEL_REPO}/database/database.sqlite
     networks:
       - marco-regulatorio
     healthcheck:

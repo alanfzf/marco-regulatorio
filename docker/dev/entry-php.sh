@@ -4,13 +4,13 @@ set -eo pipefail
 PROJECT_H="/var/www/${GIT_REPO}"
 branch="test"
 
-if [ ! -d "${PROJECT_H}" ]; then
-    # CREATE THE FOLDER
-    mkdir -p "${PROJECT_H}"
+if [ ! -f "${PROJECT_H}/.lock" ]; then
     # CLONE THE REPOSITORY
     git clone -b "$branch" "https://${GIT_TOKEN}@github.com/alanfzf/${GIT_REPO}" ${PROJECT_H} || exit -1
     # INSTALL THE COMPOSER DEPENDENCIES
     composer install --working-dir="${PROJECT_H}"
+    # CREATE LOCK FILE
+    touch "${PROJECT_H}/.lock"
 fi
 
 # CHANGE DIRECTORY
