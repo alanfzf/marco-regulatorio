@@ -18,6 +18,5 @@
   },
   "mounts": [
     "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
-  ],
-  "postStartCommand": "nohup bash -c \"/opt/scripts/entry-nvim.sh > /opt/scripts/entry-nvim.log 2>&1 &\""
+  ]
 }

@@ -24,7 +24,6 @@ services:
   queue:
     <<: *laravel
     ports: []
-    restart: on-failure
     command: ["/opt/scripts/entry-queue.sh"]
     healthcheck:
       test: []
