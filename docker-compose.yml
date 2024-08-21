@@ -5,6 +5,7 @@ services:
     tty: true
     ports:
       - "8000:80"
+      - "2222:2222"
     env_file:
       - .env
     environment:
@@ -12,7 +13,6 @@ services:
       GIT_TOKEN: ${GIT_TOKEN}
     volumes:
       - laravel:/var/www/${LARAVEL_REPO}
-      - ./database/database.sqlite:/var/www/${LARAVEL_REPO}/database/database.sqlite
     networks:
       - marco-regulatorio
     healthcheck:
@@ -24,7 +24,6 @@ services:
   queue:
     <<: *laravel
     ports: []
-    restart: on-failure
     command: ["/opt/scripts/entry-queue.sh"]
     healthcheck:
       test: []
@@ -41,7 +40,22 @@ services:
     depends_on:
       laravel:
           condition: service_healthy
+  # DATABASE CONTAINER
+  database:
+    image: mariadb:lts
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: marcoregulatorio
+      MYSQL_USER: marcoregulatorio
+      MYSQL_PASSWORD: marcoregulatorio
+    ports:
+      - "3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - marco-regulatorio
 networks:
   marco-regulatorio:
 volumes:
   laravel:
+  database:

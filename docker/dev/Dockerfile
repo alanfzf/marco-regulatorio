@@ -69,4 +69,4 @@ WORKDIR /var/www/
 ENTRYPOINT ["bash", "-c"]
 
 # Prepare to startup the container
-CMD ["$WORK_DIR/entry-php.sh"]
+CMD ["/opt/scripts/entry-php.sh"]
