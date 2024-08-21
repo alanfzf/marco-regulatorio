@@ -12,11 +12,12 @@ return new class () extends Migration {
     {
         Schema::create('laws', function (Blueprint $table) {
             $table->id();
-            $table->string("law_name")->unique();
-            $table->text("law_description");
+            $table->string("law_name");
+            $table->text("law_description")->nullable();
             $table->date("law_publish_date");
-            $table->text("law_url_reference");
-            $table->text("law_image");
+            $table->text("law_url_reference")->nullable();
+            $table->text("law_image")->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
