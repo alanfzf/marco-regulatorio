@@ -43,9 +43,8 @@ class MakeRepository extends Command
 
         $this->createClass($modelName, $directory, 'repository', "{$modelName}Repository.php");
         $this->createClass($modelName, $directory, 'repository_interface', "{$modelName}RepositoryInterface.php");
-        $this->createClass($modelName, $directory, 'repository_service', "{$modelName}Service.php");
 
-        $this->info("Repository, Interface, and Service created successfully for model {$modelName}.");
+        $this->info("Repository and Interface created successfully for model {$modelName}.");
     }
 
     protected function createClass($modelName, $directory, $stubName, $fileName)
