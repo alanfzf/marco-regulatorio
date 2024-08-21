@@ -2,7 +2,7 @@
 set -eo pipefail
 
 PROJECT_H="/var/www/${GIT_REPO}"
-branch="test"
+branch="main"
 
 if [ ! -f "${PROJECT_H}/.lock" ]; then
     # CLONE THE REPOSITORY
