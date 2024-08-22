@@ -10,9 +10,8 @@ Route::get('/', function () {
 });
 
 // ruta para leyes
-Route::group(['prefix' => 'laws'], function () {
-    Route::resource('/', LawController::class)->names('laws');
-});
+
+Route::resource('/laws', LawController::class)->names('laws');
 
 Route::get('/ftp/{file}', function ($file) {
 

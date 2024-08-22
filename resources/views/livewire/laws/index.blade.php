@@ -1,4 +1,4 @@
-<section class="">
+<section>
     <div class="flex w-full flex-col border-opacity-50">
         <div class="divider">Law compliance</div>
     </div>
@@ -19,12 +19,10 @@
         @endfor
     </div>
 
-
     <div class="flex flex-row flex-wrap gap-3 items-center justify-center" wire:loading.remove>
         @foreach ($laws as $law)
-            <x-laws.card href="#" law_name="{{ $law->law_name }}" law_date="{{ $law->law_publish_date }}"
-                law_image="{{ $law->law_image ? route('ftp.show', ['file' => $law->law_image]) : null }}" />
+            <x-laws.card href="{{ route('laws.show', ['law' => $law]) }}" law_name="{{ $law->law_name }}"
+                law_date="{{ $law->law_publish_date }}" />
         @endforeach
     </div>
-
 </section>

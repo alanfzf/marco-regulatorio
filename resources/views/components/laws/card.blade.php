@@ -7,15 +7,17 @@
         </figure>
         <div class="card-body">
             <h2 class="card-title">
-                {{ $law_name }}
+                <div class="w-4/5">
 
-                @php
-                    $classes = ['badge-warning', 'badge-error', 'badge-success'];
-                    $randomClass = $classes[array_rand($classes)];
-                @endphp
+                    <p class="truncate">
+                        <span class="text-sm">
+                            {{ $law_name }}
+                        </span>
+                    </p>
+                </div>
 
                 <div class="badge badge-neutral">
-                    <span class="text-sm">N/A</span>
+                    <span class="text-xs">N/A</span>
                 </div>
             </h2>
             <p>
