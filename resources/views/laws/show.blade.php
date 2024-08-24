@@ -55,7 +55,8 @@
                                     <input type="button" name="goTo{{ $j }}"
                                         onclick="alert('hi {{ $j }}')">
                                     <div class="text-xs">
-                                        <span class="text-primary">1</span> de <span class="">10</span>
+                                        <span class="text-primary">1</span> de <span class="">10</span> <i
+                                            class="fa-regular fa-clipboard"></i>
                                     </div>
                                 </label>
                             </div>
@@ -71,8 +72,20 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <button type="button" class="btn btn-primary ">Mass upload</button>
+        <form action="" method="POST">
+            @method('POST')
+            <button type="submit" class="btn btn-primary w-full">Mass upload</button>
+        </form>
+
         <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
+
+        <form action="{{ route('laws.destroy', ['law' => $law]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-error w-full">
+                Archive law
+            </button>
+        </form>
     </div>
 @endsection
 

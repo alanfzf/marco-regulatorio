@@ -73,7 +73,7 @@ class LawController extends Controller
     public function update(Request $request, Law $law)
     {
         //
-        redirect(route('laws.index'));
+        return redirect(route('laws.index'));
     }
 
     /**
@@ -81,9 +81,11 @@ class LawController extends Controller
      */
     public function destroy(Law $law)
     {
-        //
         $this->lawRepository->delete($law->id);
+        return redirect(route('laws.index'));
+    }
 
-        redirect(route('laws.index'));
+    public function uploadArticles(Law $law)
+    {
     }
 }
