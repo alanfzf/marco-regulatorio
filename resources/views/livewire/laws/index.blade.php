@@ -22,7 +22,7 @@
     <div class="flex flex-row flex-wrap gap-3 items-center justify-center" wire:loading.remove>
         @foreach ($laws as $law)
             <x-laws.card href="{{ route('laws.show', ['law' => $law]) }}" law_name="{{ $law->law_name }}"
-                law_date="{{ $law->law_publish_date }}" />
+                law_date="{{ $law->law_publish_date }}" law_image="{{ Utils::storageFile($law->law_image) }}" />
         @endforeach
     </div>
 </section>

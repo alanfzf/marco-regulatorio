@@ -43,40 +43,37 @@
 
             @for ($i = 0; $i < 10; $i++)
                 <div class="collapse collapse-arrow bg-base-200 mt-3">
-                    <input type="radio" name="my-accordion-2" />
-                    <div class="collapse-title text-md">
+                    <input type="checkbox" />
+                    <div class="collapse-title">
                         <i class="fa-regular fa-paste"></i> Articulo #{{ $i }}
                     </div>
-                    <div class="collapse-content">
+                    <div class="collapse-content bg-base-300">
                         @for ($j = 0; $j < 5; $j++)
-                            <div class="form-control">
+                            <div class="form-control transition-font-weight hover:font-bold">
                                 <label class="label cursor-pointer">
                                     <span class="label-text"> Articulo {{ $j }}</span>
-                                    <input type="checkbox" {{ rand(0, 1) ? 'checked="checked"' : '' }}
-                                        class="checkbox checkbox-primary" disabled />
+                                    <input type="button" name="goTo{{ $j }}"
+                                        onclick="alert('hi {{ $j }}')">
+                                    <div class="text-xs">
+                                        <span class="text-primary">1</span> de <span class="">10</span>
+                                    </div>
                                 </label>
                             </div>
                         @endfor
                     </div>
                 </div>
             @endfor
-
-
-
-
-
         </div>
 
         <div id="container" class="rounded-md shadow-md">
 
         </div>
-
     </div>
 
-
-
-    <button type="button" class="btn btn-primary w-1/5">Mass upload</button>
-    <a href="{{ route('laws.index') }}" class="btn btn-neutral w-1/5">Volver</a>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <button type="button" class="btn btn-primary ">Mass upload</button>
+        <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
+    </div>
 @endsection
 
 @push('scripts')
