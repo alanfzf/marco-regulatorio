@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LawController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,9 +10,11 @@ Route::get('/', function () {
 });
 
 
+// **** RUTA PARA ITEMS ****
+Route::resource('/items', ItemController::class)->names('items');
+
 // **** RUTA PARA ARTICULOS ****
 Route::resource('/articles', ArticleController::class)->names('articles');
-
 
 // **** RUTA PARA LEYES ****
 Route::group(['prefix' => 'laws'], function () {

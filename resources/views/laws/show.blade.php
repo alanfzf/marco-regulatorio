@@ -46,8 +46,38 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 h-96">
 
+
+
         <div class="bg-base-100 rounded-md p-3 overflow-x-auto shadow-md">
-            <h2 class="text-center font-bold">Articles</h2>
+            <div class="flex flex-row justify-between mb-3">
+                <h2 class="text-center font-bold"><i class="fa-solid fa-newspaper"></i> Articles </h2>
+
+                <label for="create_article" class="btn btn-xs ghost">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="max-sm:hidden">
+                        Add new article
+                    </span>
+                </label>
+                <input type="checkbox" id="create_article" class="modal-toggle" />
+                <div class="modal" role="dialog">
+                    <div class="modal-box">
+                        <h3 class="text-lg font-bold">Add new article</h3>
+                        <form method="POST" enctype="multipart/form-data" action="{{ route('articles.store') }}">
+                            @csrf
+                            <input type="hidden" name="law_id" value="{{ $law->id }}">
+                            <input type="text" class="input input-bordered w-full input-sm" name="article_name"
+                                required />
+                            <button type="submit" class="btn btn-primary btn-sm mt-3">Create new law</button>
+                        </form>
+                    </div>
+                    <label class="modal-backdrop" for="create_article">Close</label>
+                </div>
+                {{-- form end  --}}
+
+
+
+
+            </div>
             <table class="table table-zebra">
                 <!-- head -->
                 <thead>

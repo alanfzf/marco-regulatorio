@@ -5,6 +5,10 @@
         <strong>"{{ strtoupper($article->article_name) }}"</strong> status
     </div>
 
+    <div class="mb-3 flex justify-end">
+        <a href="{{ route('items.create', ['article' => $article->id]) }}" class="btn btn-sm btn-success">Create new item</a>
+    </div>
+
     <section class="bg-base-100 rounded-md shadow-md mb-3">
         <div class="overflow-x-auto">
             <table class="table table-zebra">
@@ -16,6 +20,7 @@
                         <th>Type</th>
                         <th>Compliant</th>
                         <th>View</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,13 +50,11 @@
 
                             <td>
                                 {{-- informative --}}
-
                                 @if ($item->item_is_informative)
                                     <span class="text-xs italic">informative</span>
                                 @else
                                     <span class="text-xs italic">non informative</span>
                                 @endif
-
                             </td>
                             <td>
                                 {{-- compliant --}}
@@ -62,13 +65,22 @@
                                 </label>
                             </td>
                             <td>
-                                <a class="btn btn-xs ghost" href="#">
+                                <a class="btn btn-xs ghost" href="{{ route('items.edit', ['item' => $item]) }}">
                                     <span class="max-sm:hidden">
                                         Edit
                                     </span>
                                     <i class="fa-solid fa-gears"></i>
                                 </a>
-
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route('items.destroy', ['item' => $item]) }}"
+                                    onsubmit="return confirm('Do you really want to delete this item')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-xs btn-error">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -76,6 +88,16 @@
             </table>
         </div>
     </section>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="{{ url()->previous() }}" class="btn btn-neutral">Go back</a>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <button id="save" type="button" class="btn btn-primary">Save</button>
+        <a href="{{ route('laws.show', ['law' => $article->law_id]) }}" class="btn btn-neutral">Go back</a>
+        <form method="POST" enctype="multipart/form-data"
+            onsubmit="return confirm('Do you really want to delete this article?')"
+            action="{{ route('articles.destroy', ['article' => $article]) }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-error w-full">Delete article</button>
+        </form>
+    </div>
 @endsection

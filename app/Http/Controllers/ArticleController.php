@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Law;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -13,6 +14,7 @@ class ArticleController extends Controller
     public function index()
     {
         //
+        throw new \Exception('Not implemented');
     }
 
     /**
@@ -20,7 +22,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        throw new \Exception('Not implemented');
     }
 
     /**
@@ -28,7 +30,18 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $valid = $request->validate([
+            'article_name' => 'required|string|max:255',
+            'law_id' => 'required|exists:laws,id'
+        ]);
+
+        $law = Law::find($valid['law_id']);
+        $article = new Article([
+            'article_name' => $valid['article_name'],
+        ]);
+        $law->articles()->save($article);
+
+        return redirect(route('laws.show', ['law' => $law->id]));
     }
 
     /**
@@ -46,6 +59,7 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         //
+        throw new \Exception('Not implemented');
     }
 
     /**
@@ -53,7 +67,12 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
+        $valid = $request->validate([
+            'article_name' => 'required|string|max:255',
+        ]);
         //
+        $article->update($valid);
+        return redirect(route('laws.show', ['law' => $article->law_id]));
     }
 
     /**
@@ -61,6 +80,7 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        $article->delete();
+        return redirect(route('laws.show', ['law' => $article->law_id]));
     }
 }
