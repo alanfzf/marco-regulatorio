@@ -6,22 +6,41 @@
     </div>
 
     <div class="mb-3 flex justify-end gap-3">
-        <a href="{{ route('items.create', ['article' => $article->id]) }}" class="btn btn-sm btn-success">Create new item</a>
+        <a href="{{ route('items.create', ['law' => $law, 'article' => $article]) }}" class="btn btn-sm btn-success">Create
+            new
+            item</a>
 
         <form method="POST" enctype="multipart/form-data"
             onsubmit="return confirm('Do you really want to delete this article?')"
-            action="{{ route('articles.destroy', ['article' => $article]) }}">
+            action="{{ route('articles.destroy', ['law' => $law, 'article' => $article]) }}">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-sm btn-error w-full">Delete article</button>
         </form>
     </div>
 
+    @if ($errors->any())
+        <div role="alert" class="alert alert-error shadow-lg">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <div>
+                <h3 class="font-bold">Error</h3>
+
+                @foreach ($errors->all() as $error)
+                    <ul class="list-inside list-disc">
+                        <li class="text-sm">{{ $error }}</li>
+                    </ul>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+
+
 
     <form method="POST" enctype="multipart-form/data"
-        action="{{ route('articles.items.validate', ['article' => $article]) }}">
+        action="{{ route('articles.validate_items', ['law' => $law, 'article' => $article]) }}">
         @csrf
-        @method('PUT')
+        @method('PATCH')
 
         {{-- start the table --}}
         <section class="bg-base-100 rounded-md shadow-md mb-3">
@@ -73,14 +92,15 @@
                                 <td>
                                     {{-- compliant --}}
                                     <label>
-                                        <input id="{{ $item->id }}" type="checkbox" name="ids[]"
-                                            class="checkbox checkbox-sm check-compliant"
+                                        <input id="{{ $item->id }}" type="checkbox" name="items[{{ $item->id }}]"
+                                            class="checkbox checkbox-sm check-compliant laravel-check"
                                             {{ $item->item_is_informative ? 'disabled checked' : '' }}
                                             {{ $item->item_is_complete ? 'checked' : '' }} />
                                     </label>
                                 </td>
                                 <td>
-                                    <a class="btn btn-xs ghost" href="{{ route('items.edit', ['item' => $item]) }}">
+                                    <a class="btn btn-xs ghost"
+                                        href="{{ route('items.edit', ['law' => $law, 'article' => $article, 'item' => $item]) }}">
                                         <span class="max-sm:hidden">
                                             Edit
                                         </span>
@@ -97,7 +117,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <button type="submit" class="btn btn-primary">Save</button>
-            <a href="{{ route('laws.show', ['law' => $article->law_id]) }}" class="btn btn-neutral">Go back</a>
+            <a href="{{ route('laws.show', ['law' => $law]) }}" class="btn btn-neutral">Go back</a>
         </div>
     </form>
 @endsection

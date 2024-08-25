@@ -9,19 +9,16 @@ Route::get('/', function () {
     return redirect(route('laws.index'));
 });
 
-
 // **** RUTA PARA ITEMS ****
-Route::resource('/items', ItemController::class)->names('items');
+Route::resource('laws.articles.items', ItemController::class)
+    ->names('items');
 
 // **** RUTA PARA ARTICULOS ****
-Route::put('/articles/{article}/items/validate', [ArticleController::class, 'validateItems'])
-    ->name('articles.items.validate');
-Route::resource('/articles', ArticleController::class)->names('articles');
+Route::patch('laws/{law}/articles/{article}/validate_items', [ArticleController::class, 'validate_items'])
+    ->name('articles.validate_items');
+
+Route::resource('laws.articles', ArticleController::class)
+    ->names('articles');
 
 // **** RUTA PARA LEYES ****
-Route::group(['prefix' => 'laws'], function () {
-    Route::post('/{law}/upload_articles', [LawController::class, 'comment'])
-        ->name('laws.upload_articles');
-});
-
-Route::resource('/laws', LawController::class)->names('laws');
+Route::resource('laws', LawController::class)->names('laws');

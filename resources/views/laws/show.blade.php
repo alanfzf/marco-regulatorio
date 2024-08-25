@@ -62,9 +62,9 @@
                 <div class="modal" role="dialog">
                     <div class="modal-box">
                         <h3 class="text-lg font-bold">Add new article</h3>
-                        <form method="POST" enctype="multipart/form-data" action="{{ route('articles.store') }}">
+                        <form method="POST" enctype="multipart/form-data"
+                            action="{{ route('articles.store', ['law' => $law->id]) }}">
                             @csrf
-                            <input type="hidden" name="law_id" value="{{ $law->id }}">
                             <input type="text" class="input input-bordered w-full input-sm" name="article_name"
                                 required />
                             <button type="submit" class="btn btn-primary btn-sm mt-3">Create new law</button>
@@ -115,7 +115,7 @@
                             </td>
                             <td>
                                 <a class="btn btn-ghost btn-xs"
-                                    href="{{ route('articles.show', ['article' => $article]) }}">details</a>
+                                    href="{{ route('articles.show', ['law' => $law, 'article' => $article]) }}">details</a>
                             </td>
                         </tr>
                     @endforeach

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\ArticleItem;
+use App\Models\Law;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -19,39 +20,25 @@ class ItemController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(Request $request, Law $law, Article $article)
     {
-        $valid = $request->validate([
-            'article' => 'required|exists:articles,id',
-        ]);
-
-        return view('items.create', ['article_id' => $valid['article']]);
+        return view('items.create', compact('law', 'article'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Law $law, Article $article)
     {
         $request->merge(['item_is_informative' => $request->has('item_is_informative')]);
         $valid = $request->validate([
             'item_title' => 'required|string|max:255',
             'item_description' => 'nullable|string|max:255',
             'item_is_informative' => 'required|boolean',
-            'article_id' => 'required|exists:articles,id',
         ]);
+        $article->items()->save(new ArticleItem($valid));
 
-        $article = Article::find($valid['article_id']);
-
-        $item = new ArticleItem([
-            'item_title' => $valid['item_title'],
-            'item_description' => $valid['item_description'],
-            'item_is_informative' => $valid['item_is_informative'],
-        ]);
-
-        $article->items()->save($item);
-
-        return redirect(route('articles.show', ['article' => $valid['article_id']]));
+        return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
     }
 
     /**
@@ -59,21 +46,21 @@ class ItemController extends Controller
      */
     public function show(ArticleItem $item)
     {
-        //
+        throw new \Exception('Not implemented');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ArticleItem $item)
+    public function edit(Law $law, Article $article, ArticleItem $item)
     {
-        return view('items.edit', compact('item'));
+        return view('items.edit', compact('law', 'article', 'item'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ArticleItem $item)
+    public function update(Request $request, Law $law, Article $article, ArticleItem $item)
     {
         $request->merge(['item_is_informative' => $request->has('item_is_informative')]);
         $valid = $request->validate([
@@ -82,15 +69,33 @@ class ItemController extends Controller
             'item_is_informative' => 'required|boolean',
         ]);
         $item->update($valid);
-        return redirect(route('articles.show', ['article' => $item->article_id]));
+        return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ArticleItem $item)
+    public function destroy(Law $law, Article $article, ArticleItem $item)
     {
         $item->delete();
-        return redirect(route('articles.show', ['article' => $item->article_id]));
+        return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
     }
+
+
+    public function validateItems(Request $request, Law $law, Article $article, ArticleItem $item)
+    {
+
+        dd($request->all());
+        $request->validate([
+            'items' => 'required|array',
+            'items.*.item_title' => 'required|string|max:255',
+            'items.*.item_description' => 'nullable|string|max:255',
+            'items.*.item_is_informative' => 'required|boolean',
+        ]);
+
+
+    }
+
+
+
 }

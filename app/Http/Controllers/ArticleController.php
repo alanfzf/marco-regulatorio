@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleItem;
 use App\Models\Law;
 use Illuminate\Http\Request;
 
@@ -28,17 +29,13 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Law $law)
     {
         $valid = $request->validate([
             'article_name' => 'required|string|max:255',
-            'law_id' => 'required|exists:laws,id'
         ]);
 
-        $law = Law::find($valid['law_id']);
-        $article = new Article([
-            'article_name' => $valid['article_name'],
-        ]);
+        $article = new Article($valid);
         $law->articles()->save($article);
 
         return redirect(route('laws.show', ['law' => $law->id]));
@@ -47,16 +44,16 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Article $article)
+    public function show(Law $law, Article $article)
     {
         $article->load('items');
-        return view('articles.show', compact('article'));
+        return view('articles.show', compact('law', 'article'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Article $article)
+    public function edit(Law $law, Article $article)
     {
         //
         throw new \Exception('Not implemented');
@@ -65,12 +62,11 @@ class ArticleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Article $article)
+    public function update(Request $request, Law $law, Article $article)
     {
         $valid = $request->validate([
             'article_name' => 'required|string|max:255',
         ]);
-        //
         $article->update($valid);
         return redirect(route('laws.show', ['law' => $article->law_id]));
     }
@@ -78,21 +74,34 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Article $article)
+    public function destroy(Law $law, Article $article)
     {
         $article->delete();
         return redirect(route('laws.show', ['law' => $article->law_id]));
     }
 
 
-    public function validateItems(Request $request, Article $article)
+    public function validate_items(Request $request, Law $law, Article $article)
     {
-        dd($request->all());
 
-        dd($article->toArray());
+        $valid = $request->validate([
+            'items' => 'nullable|array',
+            'items.*.*' => 'required|in:on',
+        ]);
 
-        return redirect(route('articles.show', ['article' => $article->id]));
+        // disable all items.
+        $article->items()->update(
+            ['item_is_complete' => false]
+        );
+
+        foreach ($valid['items'] ?? [] as $item => $value) {
+            // update only found items
+            ArticleItem::findOrFail($item)->update(
+                ['item_is_complete' => $value === 'on']
+            );
+        }
+
+
+        return redirect(route('articles.show', ['law' => $law,'article' => $article->id]));
     }
-
-
 }

@@ -5,7 +5,7 @@
         <strong>"{{ strtoupper($item->item_title) }}"</strong> edit
     </div>
 
-    <form method="POST" action="{{ route('items.destroy', ['item' => $item]) }}"
+    <form method="POST" action="{{ route('items.destroy', ['law' => $law, 'article' => $article, 'item' => $item]) }}"
         onsubmit="return confirm('Do you really want to delete this item')">
         @csrf
         @method('DELETE')
@@ -18,7 +18,8 @@
     </form>
 
 
-    <form action="{{ route('items.update', ['item' => $item]) }}" method="POST" enctype='multipart/form-data'>
+    <form action="{{ route('items.update', ['law' => $law, 'article' => $article, 'item' => $item]) }}" method="POST"
+        enctype='multipart/form-data'>
         @csrf
         @method('PUT')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
@@ -47,6 +48,8 @@
 
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{{ route('articles.show', ['article' => $item->article_id]) }}" class="btn btn-neutral">Go back</a>
+        <a href="{{ route('articles.show', ['law' => $law, 'article' => $item->article_id]) }}" class="btn btn-neutral">
+            Go back
+        </a>
     </form>
 @endsection

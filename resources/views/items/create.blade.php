@@ -5,10 +5,9 @@
         Create new item
     </div>
 
-    <form action="{{ route('items.store') }}" method="POST" enctype='multipart/form-data'>
+    <form action="{{ route('items.store', ['law' => $law, 'article' => $article]) }}" method="POST"
+        enctype='multipart/form-data'>
         @csrf
-        <input type="hidden" name="article_id" value="{{ $article_id }}">
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
             <label class="form-control w-full ">
                 <div class="label">
@@ -30,9 +29,8 @@
                 </div>
                 <textarea class="textarea textarea-bordered" name='item_description'></textarea>
             </label>
-
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{{ route('articles.show', ['article' => $article_id]) }}" class="btn btn-neutral">Go back</a>
+        <a href="{{ route('articles.show', ['law' => $law, 'article' => $article]) }}" class="btn btn-neutral">Go back</a>
     </form>
 @endsection
