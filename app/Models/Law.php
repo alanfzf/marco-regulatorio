@@ -19,4 +19,14 @@ class Law extends Model
         'law_image',
     ];
 
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
+    public function items()
+    {
+        return $this->hasManyThrough(ArticleItem::class, Article::class);
+    }
 }

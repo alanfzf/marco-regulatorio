@@ -1,6 +1,14 @@
 @extends('layouts.base')
 
 @section('main')
+    @php
+        $articles = $law->articles_count;
+        $compliant = $law->compliant_articles;
+        $non_compliant = $articles - $compliant;
+        $compliant_percentage = round(($compliant / $articles) * 100, 2);
+        $non_compliant_percentage = round(($non_compliant / $articles) * 100, 2);
+    @endphp
+
     <div class="flex w-full flex-col border-opacity-50">
         <div class="divider">
             <strong>"{{ strtoupper($law->law_name) }}"</strong> compliance status
@@ -13,8 +21,8 @@
                 <i class="fa-solid fa-check"></i>
             </div>
             <div class="stat-title">Compliant</div>
-            <div class="stat-value text-info">75</div>
-            <div class="stat-desc">75% of articles</div>
+            <div class="stat-value text-info">{{ $compliant }}</div>
+            <div class="stat-desc">{{ $compliant_percentage }}% of articles</div>
         </div>
 
         <div class="stat">
@@ -22,17 +30,17 @@
                 <i class="fa-solid fa-xmark"></i>
             </div>
             <div class="stat-title">Non compliant</div>
-            <div class="stat-value text-error">25</div>
-            <div class="stat-desc">25% of articles</div>
+            <div class="stat-value text-error">{{ $non_compliant }}</div>
+            <div class="stat-desc">{{ $non_compliant_percentage }}% of articles</div>
         </div>
 
         <div class="stat">
             <div class="stat-figure text-success">
                 <i class="fa-solid fa-chart-simple"></i>
             </div>
-            <div class="stat-value ">75%</div>
-            <div class="stat-title">Articles in compliance</div>
-            <div class="stat-desc text-success">75/100</div>
+            <div class="stat-title">Total articles</div>
+            <div class="stat-value text-success">{{ $articles }}</div>
+            <div class="stat-desc">Overall compliance {{ $compliant }}/{{ $articles }}</div>
         </div>
     </div>
 
@@ -40,30 +48,49 @@
 
         <div class="bg-base-100 rounded-md p-3 overflow-x-auto shadow-md">
             <h2 class="text-center font-bold">Articles</h2>
+            <table class="table table-zebra">
+                <!-- head -->
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Article</th>
+                        <th>Compliance status</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-            @for ($i = 0; $i < 10; $i++)
-                <div class="collapse collapse-arrow bg-base-200 mt-3">
-                    <input type="checkbox" />
-                    <div class="collapse-title">
-                        <i class="fa-regular fa-paste"></i> Articulo #{{ $i }}
-                    </div>
-                    <div class="collapse-content bg-base-300">
-                        @for ($j = 0; $j < 5; $j++)
-                            <div class="form-control transition-font-weight hover:font-bold">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text"> Articulo {{ $j }}</span>
-                                    <input type="button" name="goTo{{ $j }}"
-                                        onclick="alert('hi {{ $j }}')">
-                                    <div class="text-xs">
-                                        <span class="text-primary">1</span> de <span class="">10</span> <i
-                                            class="fa-regular fa-clipboard"></i>
-                                    </div>
-                                </label>
-                            </div>
-                        @endfor
-                    </div>
-                </div>
-            @endfor
+                    @foreach ($law->articles as $index => $article)
+                        @php
+                            $items = $article->items->toArray();
+                            $all = count($items);
+                            $count = count(
+                                array_filter($items, function ($item) {
+                                    return $item['item_is_informative'] == 1 || $item['item_is_complete'] == 1;
+                                })
+                            );
+                        @endphp
+
+                        <tr>
+                            <th>{{ $index }}</th>
+                            <td>
+                                <i class="fa-regular fa-paste"></i> {{ $article->article_name }}
+                            </td>
+                            <td>
+
+                                <div class="text-xs">
+                                    <span class="text-primary">{{ $count }}</span> of <span
+                                        class="">{{ $all }}</span> <i class="fa-regular fa-clipboard"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-ghost btn-xs">details</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
         </div>
 
         <div id="container" class="rounded-md shadow-md">
@@ -72,12 +99,13 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
         <form action="" method="POST">
             @method('POST')
             <button type="submit" class="btn btn-primary w-full">Mass upload</button>
         </form>
 
-        <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
+        <a href="{{ route('laws.edit', ['law' => $law->id]) }}" class="btn btn-info">Edit</a>
 
         <form action="{{ route('laws.destroy', ['law' => $law]) }}" method="POST">
             @csrf
@@ -90,5 +118,8 @@
 @endsection
 
 @push('scripts')
+    <script>
+        window.compliance = @js(['complaint' => $compliant_percentage, 'non_compliant' => $non_compliant_percentage])
+    </script>
     @vite(['resources/js/laws/compliance_chart.js'])
 @endpush
