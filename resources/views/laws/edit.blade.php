@@ -71,7 +71,7 @@
                 &nbsp;
             </div>
 
-            <a href="{{ route('laws.index') }}" class="btn btn-neutral">Volver</a>
+            <a href="{{ url()->previous() }}" class="btn btn-neutral">Go back</a>
             <button type="submit" class="btn btn-primary">
                 Guardar
             </button>

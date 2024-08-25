@@ -21,7 +21,7 @@
                 @php
                     $items = $law['items_count'];
                     $done = $law['complete_items_count'];
-                    $percentage = ($done / $items) * 100;
+                    $percentage = ($done / max($items, 1)) * 100;
                 @endphp
 
                 <div @class([

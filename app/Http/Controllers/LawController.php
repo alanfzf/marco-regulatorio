@@ -44,10 +44,11 @@ class LawController extends Controller
             'law_image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $values['law_image'] = $request->file('law_image')->store();
+        if($request->hasFile('law_image')) {
+            $values['law_image'] = $request->file('law_image')->store();
+        }
 
         $this->lawRepository->create($values);
-
         return redirect(route('laws.index'));
     }
 

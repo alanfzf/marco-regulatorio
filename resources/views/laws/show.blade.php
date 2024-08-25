@@ -5,8 +5,8 @@
         $articles = $law->articles_count;
         $compliant = $law->compliant_articles;
         $non_compliant = $articles - $compliant;
-        $compliant_percentage = round(($compliant / $articles) * 100, 2);
-        $non_compliant_percentage = round(($non_compliant / $articles) * 100, 2);
+        $compliant_percentage = round(($compliant / max($articles, 1)) * 100, 2);
+        $non_compliant_percentage = round(($non_compliant / max($articles, 1)) * 100, 2);
     @endphp
 
     <div class="flex w-full flex-col border-opacity-50">
@@ -77,14 +77,15 @@
                                 <i class="fa-regular fa-paste"></i> {{ $article->article_name }}
                             </td>
                             <td>
-
                                 <div class="text-xs">
                                     <span class="text-primary">{{ $count }}</span> of <span
-                                        class="">{{ $all }}</span> <i class="fa-regular fa-clipboard"></i>
+                                        class="">{{ $all }}</span>
+                                    <i class="fa-solid fa-list-check"></i>
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-ghost btn-xs">details</button>
+                                <a class="btn btn-ghost btn-xs"
+                                    href="{{ route('articles.show', ['article' => $article]) }}">details</a>
                             </td>
                         </tr>
                     @endforeach
@@ -98,7 +99,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
         <form action="" method="POST">
             @method('POST')
@@ -107,7 +108,8 @@
 
         <a href="{{ route('laws.edit', ['law' => $law->id]) }}" class="btn btn-info">Edit</a>
 
-        <form action="{{ route('laws.destroy', ['law' => $law]) }}" method="POST">
+        <form action="{{ route('laws.destroy', ['law' => $law]) }}" method="POST"
+            onsubmit="return confirm('Do you really want to archive this law?')">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-error w-full">
