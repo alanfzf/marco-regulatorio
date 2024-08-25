@@ -27,7 +27,7 @@
                 <div @class([
                     'badge',
                     'badge-success' => $percentage >= 90,
-                    'badge-warning' => $percentage >= 46,
+                    'badge-warning' => $percentage >= 46 && $percentage < 90,
                     'badge-error' => $percentage < 45
                 ])>
                     <span class="text-xs">{{ $done }}/{{ $items }}</span>
