@@ -14,6 +14,8 @@ Route::get('/', function () {
 Route::resource('/items', ItemController::class)->names('items');
 
 // **** RUTA PARA ARTICULOS ****
+Route::put('/articles/{article}/items/validate', [ArticleController::class, 'validateItems'])
+    ->name('articles.items.validate');
 Route::resource('/articles', ArticleController::class)->names('articles');
 
 // **** RUTA PARA LEYES ****

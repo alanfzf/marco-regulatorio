@@ -83,4 +83,16 @@ class ArticleController extends Controller
         $article->delete();
         return redirect(route('laws.show', ['law' => $article->law_id]));
     }
+
+
+    public function validateItems(Request $request, Article $article)
+    {
+        dd($request->all());
+
+        dd($article->toArray());
+
+        return redirect(route('articles.show', ['article' => $article->id]));
+    }
+
+
 }

@@ -13,6 +13,7 @@ export default defineConfig({
       input: [
         // javascript
         "resources/js/laws/compliance_chart.js",
+        "resources/js/articles/validate.js",
         // stylesheets
         "resources/sass/app.scss",
       ],
