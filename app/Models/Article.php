@@ -14,6 +14,7 @@ class Article extends Model
 
     protected $fillable = [
         'article_name',
+        'article_description',
         'law_id'
     ];
 
