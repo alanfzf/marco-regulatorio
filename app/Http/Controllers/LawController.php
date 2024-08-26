@@ -130,14 +130,14 @@ class LawController extends Controller
         foreach($contents as $line) {
             $data = str_getcsv($line);
 
-            if(count($data) === 4) {
+            if(count($data) !== 4) {
                 throw new \Exception('Invalid CSV format');
             }
 
             [$article, $title, $description, $is_informative] = $data;
 
 
-            if(in_array($article, $articles)) {
+            if(array_key_exists($article, $articles)) {
                 // push a new item to the article
                 $articles[$article]['items'][] = [
                     'name' => $title,
