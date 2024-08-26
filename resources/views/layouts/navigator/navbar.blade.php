@@ -18,12 +18,11 @@
             </div>
             <ul tabindex="0" class="menu menu-sm dropdown-content bg-neutral rounded-box z-[1] mt-3 w-52 p-2 shadow">
                 <li>
-                    <a href=''>
+                    <a href="#">
                         Perfil
                     </a>
                 </li>
                 <li>
-
                     <label class="w-full swap swap-rotate">
                         <!-- this hidden checkbox controls the state -->
                         <input id="theme-changer" type="checkbox" class="theme-controller"
@@ -41,11 +40,10 @@
                     </label>
                 </li>
                 <li>
-                    <form id="logout-form" action="{{ url('logout') }}" method="POST">
-                        {{ csrf_field() }}
+                    <form id="logout-form" action="{{ route('auth.logout') }}" method="POST">
+                        @csrf
                         <button type="submit">Cerrar sesión</button>
                     </form>
-
                 </li>
             </ul>
         </div>

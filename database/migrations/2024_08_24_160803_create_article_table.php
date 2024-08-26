@@ -13,6 +13,7 @@ return new class () extends Migration {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string("article_name");
+            $table->text("article_description")->nullable();
             $table->foreignId('law_id')->constrained('laws')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
