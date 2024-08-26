@@ -4,8 +4,6 @@
 @section('css')
     {{-- css base --}}
     @vite(['resources/sass/app.scss'])
-    {{-- livewire --}}
-    {{-- @livewireStyles --}}
     {{-- custom styles --}}
     @stack('styles')
 @endsection
@@ -28,8 +26,6 @@
 @section('js')
     {{-- js base --}}
     @vite(['resources/js/app.js'])
-    {{-- livewire scripts --}}
-    {{-- @livewireScripts --}}
     {{-- custom scripts --}}
     @stack('scripts')
 @endsection
