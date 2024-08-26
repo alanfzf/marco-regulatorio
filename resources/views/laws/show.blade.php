@@ -15,6 +15,7 @@
         </div>
     </div>
 
+
     <div class="stats shadow mb-3 w-full">
         <div class="stat">
             <div class="stat-figure text-info">
@@ -133,23 +134,7 @@
         <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
 
 
-        @if ($errors->any())
-            <div role="alert" class="alert alert-error shadow-lg">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <div>
-                    <h3 class="font-bold">Error</h3>
-
-                    @foreach ($errors->all() as $error)
-                        <ul class="list-inside list-disc">
-                            <li class="text-sm">{{ $error }}</li>
-                        </ul>
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
-
-
+        <a href="" class="btn btn-success">See detailed report</a>
         {{-- empieza modal --}}
         <label for="massupload" class="btn btn-primary">
             Mass upload

@@ -14,6 +14,7 @@ return new class () extends Migration {
             $table->id();
             $table->string('item_title');
             $table->text('item_description');
+            $table->text('item_comment')->nullable();
             $table->boolean('item_is_informative')->default(false);
             $table->boolean('item_is_complete')->default(false);
             $table->foreignId('article_id')->constrained('articles')->onDelete('cascade');

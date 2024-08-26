@@ -18,13 +18,13 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 // **** RUTA PARA ITEMS ****
+Route::patch('laws/{law}/articles/{article}/items/{item}/comment', [ItemController::class, 'comment'])
+    ->name('items.comment');
+
 Route::resource('laws.articles.items', ItemController::class)
     ->names('items');
 
 // **** RUTA PARA ARTICULOS ****
-Route::patch('laws/{law}/articles/{article}/validate_items', [ArticleController::class, 'validate_items'])
-    ->name('articles.validate_items');
-
 Route::resource('laws.articles', ArticleController::class)
     ->names('articles');
 

@@ -16,6 +16,7 @@ class ArticleItem extends Model
         'item_description',
         'item_is_informative',
         'item_is_complete',
+        'item_comment',
         'article_id'
     ];
 

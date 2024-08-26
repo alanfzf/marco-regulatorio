@@ -10,7 +10,7 @@
         @csrf
         @method('DELETE')
         <div class="flex justify-end mb-3">
-            <button type="submit" class="btn btn-xs btn-error">
+            <button type="submit" class="btn btn-sm btn-error">
                 Delete item
                 <i class="fa-solid fa-trash"></i>
             </button>
