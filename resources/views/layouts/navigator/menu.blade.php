@@ -9,7 +9,7 @@
         @yield('css')
     </head>
 
-    <body data-theme="light">
+    <body>
         <div class="min-h-screen drawer bg-base-200">
             <input id="main-drawer" type="checkbox" class="drawer-toggle" />
             <div class="drawer-content">
@@ -39,5 +39,4 @@
         </div>
         @yield('js')
     </body>
-
 </html>

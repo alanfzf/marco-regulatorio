@@ -12,6 +12,7 @@ export default defineConfig({
     laravel({
       input: [
         // javascript
+        "resources/js/app.js",
         "resources/js/laws/compliance_chart.js",
         "resources/js/articles/validate.js",
         // stylesheets
