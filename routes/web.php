@@ -32,7 +32,6 @@ Route::resource('laws.articles', ArticleController::class)
 Route::post('laws/{law}/upload', [LawController::class, 'upload'])
     ->name('laws.upload');
 
-Route::resource('laws', LawController::class)->names('laws');
 Route::resource('laws', LawController::class)
     ->middleware('auth')
     ->names('laws');
