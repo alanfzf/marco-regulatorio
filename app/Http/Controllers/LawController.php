@@ -116,7 +116,44 @@ class LawController extends Controller
         return redirect(route('laws.index'));
     }
 
-    public function uploadArticles(Law $law)
+    public function upload(Request $request, Law $law)
     {
+
+        $request->validate([
+            'articles' => 'required|file|mimes:csv',
+        ]);
+
+        $file = $request->file('articles');
+        $contents = file($file->getRealPath());
+        $articles = [];
+
+        foreach($contents as $line) {
+            $data = str_getcsv($line);
+
+            if(count($data) === 4) {
+                throw new \Exception('Invalid CSV format');
+            }
+
+            [$article, $title, $description, $is_informative] = $data;
+
+
+            if(in_array($article, $articles)) {
+                // push a new item to the article
+                $articles[$article]['items'][] = [
+                    'name' => $title,
+                    'description' => $description,
+                    'is_informative' => $is_informative === 'TRUE',
+                ];
+            } else {
+                // create the base article
+                $articles[$article] = [
+                    'name' => $title,
+                    'description' => $description,
+                    'items' => [],
+                ];
+            }
+
+        }
+        dd($articles);
     }
 }

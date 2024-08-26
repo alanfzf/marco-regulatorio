@@ -21,4 +21,7 @@ Route::resource('laws.articles', ArticleController::class)
     ->names('articles');
 
 // **** RUTA PARA LEYES ****
+Route::post('laws/{law}/upload', [LawController::class, 'upload'])
+    ->name('laws.upload');
+
 Route::resource('laws', LawController::class)->names('laws');
