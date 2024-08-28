@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
+use App\Models\ArticleItem;
 use App\Models\Law;
 use App\Repositories\Law\LawRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LawController extends Controller
 {
@@ -116,7 +119,75 @@ class LawController extends Controller
         return redirect(route('laws.index'));
     }
 
-    public function uploadArticles(Law $law)
+    public function upload(Request $request, Law $law)
     {
+
+        $request->validate([
+            'articles' => 'required|file|mimes:csv',
+        ]);
+
+        $file = $request->file('articles');
+        $contents = file($file->getRealPath());
+        $articles = [];
+        array_shift($contents);
+
+
+
+        foreach($contents as $line) {
+            $data = str_getcsv($line);
+
+            if(count($data) !== 4) {
+                throw new \Exception('Invalid CSV format');
+            }
+
+            [$article, $title, $description, $is_informative] = $data;
+
+
+            if(array_key_exists($article, $articles)) {
+                // push a new item to the article
+                $articles[$article]['items'][] = [
+                    'name' => $title,
+                    'description' => $description,
+                    'is_informative' => $is_informative === 'TRUE',
+                ];
+            } else {
+                // create the base article
+                $articles[$article] = [
+                    'name' => $title,
+                    'description' => $description,
+                    'items' => [],
+                ];
+            }
+        }
+
+
+        DB::transaction(function () use ($articles, $law) {
+
+            $law->articles()->delete();
+            foreach($articles as $article) {
+
+                // CREATE THE ARTICLE
+                $art = new Article();
+                $art->article_name = $article['name'];
+                $art->article_description = $article['description'];
+                $art->law()->associate($law);
+                $art->save();
+
+                $articleItems = [];
+                foreach($article['items'] as $item) {
+                    $it = new ArticleItem();
+                    $it->item_title = $item['name'];
+                    $it->item_description = $item['description'];
+                    $it->item_is_informative = $item['is_informative'];
+                    $articleItems[] = $it;
+                }
+
+                $art->items()->saveMany($articleItems);
+            }
+
+        });
+
+
+        return redirect(route('laws.show', ['law' => $law]));
     }
 }

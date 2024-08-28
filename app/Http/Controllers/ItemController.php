@@ -62,7 +62,9 @@ class ItemController extends Controller
      */
     public function update(Request $request, Law $law, Article $article, ArticleItem $item)
     {
-        $request->merge(['item_is_informative' => $request->has('item_is_informative')]);
+        $request->merge([
+            'item_is_informative' => $request->has('item_is_informative')
+        ]);
         $valid = $request->validate([
             'item_title' => 'required|string|max:255',
             'item_description' => 'nullable|string|max:255',
@@ -71,6 +73,26 @@ class ItemController extends Controller
         $item->update($valid);
         return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
     }
+
+
+    public function comment(Request $request, Law $law, Article $article, ArticleItem $item)
+    {
+
+        $request->merge([
+            'item_is_complete' => $request->has('item_is_complete')
+        ]);
+
+
+        $valid = $request->validate([
+            'item_is_complete' => 'required|boolean',
+            'item_comment' => 'nullable|string|max:255',
+        ]);
+
+        $item->update($valid);
+
+        return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
+    }
+
 
     /**
      * Remove the specified resource from storage.

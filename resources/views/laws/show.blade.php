@@ -15,6 +15,7 @@
         </div>
     </div>
 
+
     <div class="stats shadow mb-3 w-full">
         <div class="stat">
             <div class="stat-figure text-info">
@@ -131,10 +132,28 @@
 
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
-        <form action="" method="POST">
-            @method('POST')
-            <button type="submit" class="btn btn-primary w-full">Mass upload</button>
-        </form>
+
+
+        <a href="" class="btn btn-success">See detailed report</a>
+        {{-- empieza modal --}}
+        <label for="massupload" class="btn btn-primary">
+            Mass upload
+        </label>
+
+        <input type="checkbox" id="massupload" class="modal-toggle" />
+        <div class="modal" role="dialog">
+            <div class="modal-box">
+                <form action="{{ route('laws.upload', ['law' => $law]) }}" method="POST" enctype='multipart/form-data'>
+                    @csrf
+                    <h3 class="text-lg font-bold mb-3">Mass upload of articles</h3>
+                    <input type="file" name="articles" class="file-input file-input-bordered file-input-sm mb-3"
+                        required />
+                    <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                </form>
+            </div>
+            <label class="modal-backdrop" for="massupload">Close</label>
+        </div>
+        {{-- termina modal --}}
 
         <a href="{{ route('laws.edit', ['law' => $law->id]) }}" class="btn btn-info">Edit</a>
 
