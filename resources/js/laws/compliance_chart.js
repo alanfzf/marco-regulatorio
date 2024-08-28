@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   Highcharts.chart("container", {
     chart: {
       type: "pie",
+      backgroundColor: "oklch(var(--b1))",
     },
     title: {
       text: "Status",

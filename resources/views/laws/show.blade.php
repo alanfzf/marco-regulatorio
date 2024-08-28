@@ -134,7 +134,7 @@
         <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
 
 
-        <a href="" class="btn btn-success">See detailed report</a>
+        <a href="{{ route('laws.report', ['law' => $law]) }}" class="btn btn-success">See detailed report</a>
         {{-- empieza modal --}}
         <label for="massupload" class="btn btn-primary">
             Mass upload

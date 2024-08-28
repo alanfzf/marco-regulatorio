@@ -61,13 +61,6 @@ class LawController extends Controller
     public function show(Law $law)
     {
 
-        /*
-         * tested_articles: cuenta todos los articulos que tienen que ser evaluados
-         * completed_articles: cuenta todos los articulos que tienen sus items como completados
-         * es decir que no sean informativos y que se completen, y si es ifnormativo el estado
-         * de si esta completado o no es irrelevante
-         */
-
         $law->load('articles.items')->loadCount([
             'articles',
             'articles as compliant_articles' => function ($query) {
@@ -117,6 +110,32 @@ class LawController extends Controller
     {
         $this->lawRepository->delete($law->id);
         return redirect(route('laws.index'));
+    }
+
+    public function report(Law $law)
+    {
+
+        $law->load(['articles' => function ($query) {
+            // first query
+            $query->withCount([
+                'items as all_items_count',
+                'items as compliant_items_count' => function ($query) {
+                    // Count items where either item_is_informative == 1 or item_is_complete == 1
+                    $query->where(function ($query) {
+                        $query->where('item_is_informative', true)
+                            ->orWhere('item_is_complete', true);
+                    });
+                },
+            ]);
+            // second query
+            $query->whereHas('items', function ($query) {
+                $query->where('item_is_informative', false)
+                      ->where('item_is_complete', false);
+            });
+        }, 'articles.items']);
+
+
+        return view('laws.report', compact('law'));
     }
 
     public function upload(Request $request, Law $law)
