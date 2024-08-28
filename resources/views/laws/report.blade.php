@@ -1,7 +1,63 @@
 @extends('layouts.base')
 
 @section('main')
-    <h2 class="text-xl font-bold mb-3">Non compliant articles</h2>
+    <div class="divider">
+        <strong>{{ $law->law_name }}</strong> general report
+    </div>
+
+    <h1 class="text-xl font-bold">Metrics</h1>
+    <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Compliant articles</div>
+                <div class="stat-desc">21% more than last month</div>
+
+                <div class="stat-value">89,400</div>
+            </div>
+        </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Non compliant articles</div>
+                <div class="stat-value">89,400</div>
+                <div class="stat-desc">21% more than last month</div>
+            </div>
+        </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Validated items</div>
+                <div class="stat-value">89,400</div>
+                <div class="stat-desc">21% more than last month</div>
+            </div>
+        </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Non validated items</div>
+                <div class="stat-value">89,400</div>
+                <div class="stat-desc">21% more than last month</div>
+            </div>
+        </div>
+
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Nivel de cumplimiento</div>
+                <div class="stat-value">89,400</div>
+                <div class="stat-desc">21% more than last month</div>
+            </div>
+        </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Comentarios</div>
+                <div class="stat-value">89,400</div>
+                <div class="stat-desc">21% more than last month</div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+    <h2 class="text-lg font-bold my-3">Non compliant articles</h2>
     <div class="h-96 overflow-x-auto bg-base-100 rounded-md">
         <table class="table table-pin-rows z-0">
             @foreach ($law->articles as $article)
