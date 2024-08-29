@@ -77,7 +77,7 @@
                 <tbody>
                     @foreach ($article->items as $item)
                         @php
-                            $ok = $item['item_is_informative'] == 1 || $item['item_is_complete'] == 1;
+                            $ok = $item->item_is_informative == 1 || $item->maturity->maturity_level >= 1;
                         @endphp
                         <tr>
                             {{-- TITLE --}}
@@ -101,6 +101,19 @@
                                         <h3 class="text-left text-lg font-bold">
                                             Item {{ $item['item_title'] }}
                                         </h3>
+
+                                        <label class="form-control">
+                                            <div class="label">
+                                                <span class="label-text">
+                                                    <i class="fa-solid fa-circle-info"></i>
+                                                    Maturity level
+                                                </span>
+                                            </div>
+                                            <input class="input input-bordered"
+                                                value="{{ $item->maturity->maturity_name }} ({{ $ok ? 'In complaince' : 'Not in complaince' }})"
+                                                disabled />
+                                        </label>
+
 
                                         <label class="form-control">
                                             <div class="label">

@@ -9,8 +9,6 @@
         <div class="card-body">
             <h2 class="card-title">
                 <div class="w-4/5">
-
-
                     <p class="truncate">
                         <span class="text-sm">
                             {{ $law['law_name'] ?? '---' }}
@@ -40,7 +38,7 @@
             <div class="card-actions justify-end">
                 <div class="badge badge-outline">{{ $law['law_publish_date'] ?? '---' }}</div>
                 <div class="badge badge-outline">
-                    Articulos: &nbsp; <strong>{{ $law['articles_count'] ?? 0 }}</strong>
+                    Articles: &nbsp; <strong>{{ $law['articles_count'] ?? 0 }}</strong>
                 </div>
             </div>
         </div>

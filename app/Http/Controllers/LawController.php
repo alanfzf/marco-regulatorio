@@ -126,7 +126,7 @@ class LawController extends Controller
                     // Count items where either item_is_informative  or they maturity level is greater than or equal to 1
                     $query->where(function ($query) {
                         $query->where('item_is_informative', true)
-                            ->whereHas('maturity', function ($mquery) {
+                            ->orWhereHas('maturity', function ($mquery) {
                                 $mquery->where('maturity_level', '>=', 1);
                             });
                     });
@@ -139,7 +139,7 @@ class LawController extends Controller
                         $mquery->where('maturity_level', '<', 1);
                     });
             });
-        }, 'articles.items']);
+        }, 'articles.items.maturity']);
 
 
         return view('laws.report', compact('law'));
