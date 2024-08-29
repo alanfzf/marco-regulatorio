@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Article;
 use App\Models\ArticleItem;
 use App\Models\Law;
+use App\Models\MaturityLevel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -26,18 +27,22 @@ class TestLawSeeder extends Seeder
         // Create multiple Articles for this Law
         $articles = Article::factory()->count(15)->create([
             'law_id' => $law->id,
-            'article_name' => Str::random(10),
+            'article_name' => Str::random(16),
         ]);
 
         // Create multiple ArticleItems for each Article
         foreach ($articles as $article) {
+            $maturity = MaturityLevel::findOrFail(1);
+            $informative = rand(0, 1) == 1;
             ArticleItem::factory()->count(5)->create([
                 'article_id' => $article->id,
-                'item_title' => Str::random(10),
+                'item_title' => Str::random(16),
                 'item_description' => 'Description for the item.',
-                'item_is_informative' => rand(0, 1) == 1,
-                'item_is_complete' => rand(0, 1) == 1,
+                'item_is_informative' => $informative,
+                'maturity_id' => $maturity->id,
             ]);
+
+
         }
     }
 

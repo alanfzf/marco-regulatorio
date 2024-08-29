@@ -61,12 +61,15 @@ class LawController extends Controller
     public function show(Law $law)
     {
 
-        $law->load('articles.items')->loadCount([
+        $law->load('articles.items.maturity')->loadCount([
             'articles',
             'articles as compliant_articles' => function ($query) {
+                // buscar items que no tengan ni item_is_informative ni maturity menor a 1
                 $query->whereDoesntHave('items', function ($query) {
                     $query->where('item_is_informative', false)
-                          ->where('item_is_complete', false);
+                    ->whereHas('maturity', function ($mquery) {
+                        $mquery->where('maturity_level', '<', 1);
+                    });
                 });
             },
         ]);
@@ -120,17 +123,21 @@ class LawController extends Controller
             $query->withCount([
                 'items as all_items_count',
                 'items as compliant_items_count' => function ($query) {
-                    // Count items where either item_is_informative == 1 or item_is_complete == 1
+                    // Count items where either item_is_informative  or they maturity level is greater than or equal to 1
                     $query->where(function ($query) {
                         $query->where('item_is_informative', true)
-                            ->orWhere('item_is_complete', true);
+                            ->whereHas('maturity', function ($mquery) {
+                                $mquery->where('maturity_level', '>=', 1);
+                            });
                     });
                 },
             ]);
             // second query
             $query->whereHas('items', function ($query) {
                 $query->where('item_is_informative', false)
-                      ->where('item_is_complete', false);
+                    ->whereHas('maturity', function ($mquery) {
+                        $mquery->where('maturity_level', '<', 1);
+                    });
             });
         }, 'articles.items']);
 

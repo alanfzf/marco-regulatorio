@@ -50,7 +50,7 @@
 
                             <td>
                                 <label>
-                                    @if ($item->item_is_complete || $item->item_is_informative)
+                                    @if ($item->maturity->maturity_level >= 1 || $item->item_is_informative)
                                         <i class="fa-solid fa-circle-check text-success"></i>
                                     @else
                                         <i class="fa-solid fa-circle-xmark text-error"></i>
@@ -95,22 +95,27 @@
                                                 <textarea class="textarea textarea-bordered h-24" placeholder="Place a coment here.." name="item_comment">{{ $item->item_comment }}</textarea>
                                             </label>
 
-                                            <div class="form-control">
-                                                <label class="label cursor-pointer">
+                                            <label class="form-control">
+                                                <div class="label">
                                                     <span class="label-text">
                                                         <i class="fa-solid fa-clipboard-list"></i>
-                                                        Compliance:
+                                                        Maturity level
                                                     </span>
-                                                    <input name="item_is_complete" type="checkbox"
-                                                        {{ $item->item_is_complete ? 'checked' : '' }} class="checkbox" />
-                                                </label>
-                                            </div>
+                                                </div>
+                                                <select name="maturity_id" class="select select-bordered">
+                                                    <option value="1">Incomplete (0)</option>
+                                                    <option value="2">Initial (1)</option>
+                                                    <option value="3">Managed (2)</option>
+                                                    <option value="4">Defined (3)</option>
+                                                    <option value="5">Quantitatively Managed (4)</option>
+                                                    <option value="6">Optimizing (5)</option>
+                                                </select>
+                                            </label>
+
 
                                             <div class="flex justify-end mt-3">
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                             </div>
-
-
                                         </form>
 
                                     </div>

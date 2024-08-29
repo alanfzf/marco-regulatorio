@@ -97,7 +97,8 @@
                             $all = count($items);
                             $count = count(
                                 array_filter($items, function ($item) {
-                                    return $item['item_is_informative'] == 1 || $item['item_is_complete'] == 1;
+                                    return $item['item_is_informative'] == 1 ||
+                                        $item['maturity']['maturity_level'] >= 1;
                                 })
                             );
                         @endphp

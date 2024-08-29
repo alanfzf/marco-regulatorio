@@ -15,10 +15,9 @@ class ArticleItem extends Model
         'item_title',
         'item_description',
         'item_is_informative',
-        'item_is_complete',
         'item_comment',
+        'maturity_id',
         'article_id',
-        'maturity_level_id'
     ];
 
     public function article()
@@ -28,6 +27,6 @@ class ArticleItem extends Model
 
     public function maturity()
     {
-        return $this->belongsTo(Maturity::class, 'maturity_level_id');
+        return $this->belongsTo(MaturityLevel::class, 'maturity_id');
     }
 }

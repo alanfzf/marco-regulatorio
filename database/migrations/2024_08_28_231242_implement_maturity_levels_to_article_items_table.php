@@ -12,7 +12,7 @@ return new class () extends Migration {
     {
         Schema::table('article_items', function (Blueprint $table) {
             $table->dropColumn('item_is_complete');
-            $table->foreignId('maturity_level_id')->constrained('maturity_levels')->onDelete('cascade');
+            $table->foreignId('maturity_id')->after('item_is_informative')->constrained('maturity_levels')->onDelete('cascade');
         });
     }
 
@@ -22,7 +22,7 @@ return new class () extends Migration {
     public function down(): void
     {
         Schema::table('article_items', function (Blueprint $table) {
-            $table->dropForeign(['maturity_level_id']);
+            $table->dropForeign(['maturity_id']);
             $table->boolean('item_is_complete')->default(false);
         });
     }

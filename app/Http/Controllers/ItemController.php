@@ -78,13 +78,8 @@ class ItemController extends Controller
     public function comment(Request $request, Law $law, Article $article, ArticleItem $item)
     {
 
-        $request->merge([
-            'item_is_complete' => $request->has('item_is_complete')
-        ]);
-
-
         $valid = $request->validate([
-            'item_is_complete' => 'required|boolean',
+            'maturity_id' => 'required|exists:maturity_levels,id',
             'item_comment' => 'nullable|string|max:255',
         ]);
 
