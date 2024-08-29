@@ -154,8 +154,13 @@ class LawController extends Controller
             }, 'articles.items.maturity']);
 
 
+        // calculate the average maturity level
+        // TODO: pending to filter by law id
+        $avgMaturity = DB::select("SELECT AVG(ml.maturity_level) as avg_maturity_level
+            FROM article_items JOIN marcoregulatorio.maturity_levels ml ON article_items.maturity_id = ml.id");
+        $avgMaturity = $avgMaturity[0]->avg_maturity_level;
 
-        return view('laws.report', compact('law'));
+        return view('laws.report', compact('law', 'avgMaturity'));
     }
 
     public function upload(Request $request, Law $law)

@@ -12,18 +12,17 @@
         $art_comp_perc = round(($art_comp / max($art_total, 1)) * 100, 2);
         $art_not_comp_perc = round(($art_not_comp / max($art_total, 1)) * 100, 2);
 
-        $totalMaturityLevel = 0;
-        $itemCount = 0;
+        $levels = [
+            '1' => 'Initial',
+            '2' => 'Managed',
+            '3' => 'Defined',
+            '4' => 'Quantitatively Managed',
+            '5' => 'Optimizing'
+        ];
 
-        foreach ($law->articles as $article) {
-            foreach ($article->items as $item) {
-                $totalMaturityLevel += $item->maturity->maturity_level;
-                $itemCount++;
-            }
-        }
-
-        $averageMaturityLevel = $totalMaturityLevel / $itemCount;
-
+        $avgRounded = round($avgMaturity, 2);
+        $avgNearest = round($avgMaturity);
+        $levelName = $levels[$avgNearest] ?? 'N/A';
     @endphp
 
 
@@ -46,8 +45,8 @@
         <div class="stats shadow">
             <div class="stat">
                 <div class="stat-title">Average madurity level</div>
-                <div class="font-bold">IDK</div>
-                <div class="stat-desc">Overall score 3.33 </div>
+                <div class="font-bold">{{ $levelName }}</div>
+                <div class="stat-desc">Overall score {{ $avgRounded }}</div>
             </div>
         </div>
     </section>
