@@ -17,11 +17,17 @@ class ArticleItem extends Model
         'item_is_informative',
         'item_is_complete',
         'item_comment',
-        'article_id'
+        'article_id',
+        'maturity_level_id'
     ];
 
     public function article()
     {
         return $this->belongsTo(Article::class);
+    }
+
+    public function maturity()
+    {
+        return $this->belongsTo(Maturity::class, 'maturity_level_id');
     }
 }
