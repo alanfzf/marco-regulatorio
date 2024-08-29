@@ -118,28 +118,41 @@ class LawController extends Controller
     public function report(Law $law)
     {
 
-        $law->load(['articles' => function ($query) {
-            // first query
-            $query->withCount([
-                'items as all_items_count',
-                'items as compliant_items_count' => function ($query) {
-                    // Count items where either item_is_informative  or they maturity level is greater than or equal to 1
-                    $query->where(function ($query) {
-                        $query->where('item_is_informative', true)
-                            ->orWhereHas('maturity', function ($mquery) {
-                                $mquery->where('maturity_level', '>=', 1);
+        $law->loadCount([
+                // count the articles and their stats
+                'articles',
+                'articles as articles_in_compliance' => function ($query) {
+                    $query->whereDoesntHave('items', function ($query) {
+                        $query->where('item_is_informative', false)
+                            ->whereHas('maturity', function ($mquery) {
+                                $mquery->where('maturity_level', '<', 1);
                             });
                     });
                 },
-            ]);
-            // second query
-            $query->whereHas('items', function ($query) {
-                $query->where('item_is_informative', false)
-                    ->whereHas('maturity', function ($mquery) {
-                        $mquery->where('maturity_level', '<', 1);
-                    });
-            });
-        }, 'articles.items.maturity']);
+            ])
+            ->load(['articles' => function ($query) {
+                // load the article items and their stats
+                $query->withCount([
+                    'items as all_items_count',
+                    'items as compliant_items_count' => function ($query) {
+                        // Count items where either item_is_informative  or they maturity level is greater than or equal to 1
+                        $query->where(function ($query) {
+                            $query->where('item_is_informative', true)
+                                ->orWhereHas('maturity', function ($mquery) {
+                                    $mquery->where('maturity_level', '>=', 1);
+                                });
+                        });
+                    },
+                ]);
+                // second query
+                $query->whereHas('items', function ($query) {
+                    $query->where('item_is_informative', false)
+                        ->whereHas('maturity', function ($mquery) {
+                            $mquery->where('maturity_level', '<', 1);
+                        });
+                });
+            }, 'articles.items.maturity']);
+
 
 
         return view('laws.report', compact('law'));

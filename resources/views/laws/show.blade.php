@@ -21,7 +21,7 @@
             <div class="stat-figure text-info">
                 <i class="fa-solid fa-check"></i>
             </div>
-            <div class="stat-title">Compliant</div>
+            <div class="stat-title">In complaince</div>
             <div class="stat-value text-info">{{ $compliant }}</div>
             <div class="stat-desc">{{ $compliant_percentage }}% of articles</div>
         </div>
@@ -30,7 +30,7 @@
             <div class="stat-figure text-error">
                 <i class="fa-solid fa-xmark"></i>
             </div>
-            <div class="stat-title">Non compliant</div>
+            <div class="stat-title">Not in compliance</div>
             <div class="stat-value text-error">{{ $non_compliant }}</div>
             <div class="stat-desc">{{ $non_compliant_percentage }}% of articles</div>
         </div>
@@ -171,7 +171,7 @@
 
 @push('scripts')
     <script>
-        window.compliance = @js(['complaint' => $compliant_percentage, 'non_compliant' => $non_compliant_percentage])
+        window.compliance = @js(['in_complaince' => $compliant_percentage, 'non_complaince' => $non_compliant_percentage])
     </script>
     @vite(['resources/js/laws/compliance_chart.js'])
 @endpush

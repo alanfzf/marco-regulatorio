@@ -1,7 +1,7 @@
 import Highcharts from "highcharts"
 
 document.addEventListener("DOMContentLoaded", function () {
-  const { complaint, non_compliant } = compliance
+  const { in_complaince, non_complaince } = compliance
 
   Highcharts.chart("container", {
     chart: {
@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
         name: "Percentage",
         colorByPoint: true,
         data: [
-          { name: "Compliant", y: complaint },
-          { name: "Non compliant", y: non_compliant },
+          { name: "Compliant", y: in_complaince },
+          { name: "Non compliant", y: non_complaince },
         ],
       },
     ],

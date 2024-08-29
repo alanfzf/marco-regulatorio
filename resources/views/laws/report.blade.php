@@ -5,56 +5,52 @@
         <strong>{{ $law->law_name }}</strong> general report
     </div>
 
+    @php
+        $art_comp = $law->articles_in_compliance;
+        $art_not_comp = $law->articles_count - $law->articles_in_compliance;
+        $art_total = $law->articles_count;
+        $art_comp_perc = round(($art_comp / max($art_total, 1)) * 100, 2);
+        $art_not_comp_perc = round(($art_not_comp / max($art_total, 1)) * 100, 2);
+
+        $totalMaturityLevel = 0;
+        $itemCount = 0;
+
+        foreach ($law->articles as $article) {
+            foreach ($article->items as $item) {
+                $totalMaturityLevel += $item->maturity->maturity_level;
+                $itemCount++;
+            }
+        }
+
+        $averageMaturityLevel = $totalMaturityLevel / $itemCount;
+
+    @endphp
+
+
     <h1 class="text-xl font-bold">Metrics</h1>
     <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         <div class="stats shadow">
             <div class="stat">
-                <div class="stat-title">Compliant articles</div>
-                <div class="stat-desc">21% more than last month</div>
-
-                <div class="stat-value">89,400</div>
+                <div class="stat-title">Art. in compliance</div>
+                <div class="font-bold text-success">{{ $art_comp }} / {{ $art_total }}</div>
+                <div class="stat-desc"> {{ $art_comp_perc }}% of articles</div>
             </div>
         </div>
         <div class="stats shadow">
             <div class="stat">
-                <div class="stat-title">Non compliant articles</div>
-                <div class="stat-value">89,400</div>
-                <div class="stat-desc">21% more than last month</div>
+                <div class="stat-title">Art. not in compliance</div>
+                <div class="font-bold text-error">{{ $art_not_comp }} / {{ $art_total }}</div>
+                <div class="stat-desc">{{ $art_not_comp_perc }}% of articles</div>
             </div>
         </div>
         <div class="stats shadow">
             <div class="stat">
-                <div class="stat-title">Validated items</div>
-                <div class="stat-value">89,400</div>
-                <div class="stat-desc">21% more than last month</div>
+                <div class="stat-title">Average madurity level</div>
+                <div class="font-bold">IDK</div>
+                <div class="stat-desc">Overall score 3.33 </div>
             </div>
         </div>
-        <div class="stats shadow">
-            <div class="stat">
-                <div class="stat-title">Non validated items</div>
-                <div class="stat-value">89,400</div>
-                <div class="stat-desc">21% more than last month</div>
-            </div>
-        </div>
-
-        <div class="stats shadow">
-            <div class="stat">
-                <div class="stat-title">Nivel de cumplimiento</div>
-                <div class="stat-value">89,400</div>
-                <div class="stat-desc">21% more than last month</div>
-            </div>
-        </div>
-        <div class="stats shadow">
-            <div class="stat">
-                <div class="stat-title">Comentarios</div>
-                <div class="stat-value">89,400</div>
-                <div class="stat-desc">21% more than last month</div>
-            </div>
-        </div>
-
     </section>
-
-
 
 
     <h2 class="text-lg font-bold my-3">Non compliant articles</h2>
@@ -146,3 +142,7 @@
         </table>
     </div>
 @endsection
+
+@push('scripts')
+    @vite(['resources/js/laws/report.js'])
+@endpush
