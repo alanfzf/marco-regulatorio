@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
       backgroundColor: "oklch(var(--b1))",
     },
     title: {
-      text: "Status",
+      text: "Compliance status",
     },
     credits: { enabled: false },
     tooltip: {
@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
         name: "Percentage",
         colorByPoint: true,
         data: [
-          { name: "Compliant", y: in_complaince },
-          { name: "Non compliant", y: non_complaince },
+          { name: "In compliance", y: in_complaince },
+          { name: "Not in compliance", y: non_complaince },
         ],
       },
     ],

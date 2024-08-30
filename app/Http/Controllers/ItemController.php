@@ -36,7 +36,10 @@ class ItemController extends Controller
             'item_description' => 'nullable|string|max:255',
             'item_is_informative' => 'required|boolean',
         ]);
-        $article->items()->save(new ArticleItem($valid));
+
+        $item = new ArticleItem($valid);
+        $item->maturity()->associate(1); // 1 is incomplete.
+        $article->items()->save($item);
 
         return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
     }

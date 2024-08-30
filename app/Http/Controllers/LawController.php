@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\ArticleItem;
 use App\Models\Law;
+use App\Models\MaturityLevel;
 use App\Repositories\Law\LawRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +64,7 @@ class LawController extends Controller
 
         $law->load('articles.items.maturity')->loadCount([
             'articles',
-            'articles as compliant_articles' => function ($query) {
+            'articles as compliance_articles' => function ($query) {
                 // buscar items que no tengan ni item_is_informative ni maturity menor a 1
                 $query->whereDoesntHave('items', function ($query) {
                     $query->where('item_is_informative', false)
@@ -129,12 +130,18 @@ class LawController extends Controller
                             });
                     });
                 },
+            'items',
+            'items as informative_items_count' => function ($query) {
+                $query->where('item_is_informative', true);
+            },
+
+
             ])
             ->load(['articles' => function ($query) {
                 // load the article items and their stats
                 $query->withCount([
                     'items as all_items_count',
-                    'items as compliant_items_count' => function ($query) {
+                    'items as compliance_items_count' => function ($query) {
                         // Count items where either item_is_informative  or they maturity level is greater than or equal to 1
                         $query->where(function ($query) {
                             $query->where('item_is_informative', true)
@@ -154,13 +161,27 @@ class LawController extends Controller
             }, 'articles.items.maturity']);
 
 
-        // calculate the average maturity level
-        // TODO: pending to filter by law id
-        $avgMaturity = DB::select("SELECT AVG(ml.maturity_level) as avg_maturity_level
-            FROM article_items JOIN marcoregulatorio.maturity_levels ml ON article_items.maturity_id = ml.id");
-        $avgMaturity = $avgMaturity[0]->avg_maturity_level;
+        // CALCULATE THE AVERAGE MATURITY LEVEL
+        $avgMaturity = Law::find($law->id)
+            ->articles()
+            ->join('article_items', 'articles.id', '=', 'article_items.article_id')
+            ->join('maturity_levels', 'article_items.maturity_id', '=', 'maturity_levels.id')
+            ->avg('maturity_levels.maturity_level');
 
-        return view('laws.report', compact('law', 'avgMaturity'));
+        // CALCULATE HOW MANY ITEMS ARE IN EACH MATURITY LEVEL
+        $maturityLevels = MaturityLevel::select('maturity_levels.maturity_name', DB::raw('COUNT(article_items.id) as article_item_count'))
+            ->leftJoin('article_items', 'maturity_levels.id', '=', 'article_items.maturity_id')
+            ->leftJoin('articles', 'article_items.article_id', '=', 'articles.id')
+            ->leftJoin('laws', 'articles.law_id', '=', 'laws.id')
+            ->where(function ($query) use ($law) {
+                $query->where('laws.id', $law->id)
+                      ->orWhereNull('laws.id');
+            })->groupBy('maturity_levels.maturity_name')
+            ->orderBy('maturity_levels.maturity_level')
+            ->get();
+
+
+        return view('laws.report', compact('law', 'avgMaturity', 'maturityLevels'));
     }
 
     public function upload(Request $request, Law $law)

@@ -11,6 +11,9 @@
         $art_total = $law->articles_count;
         $art_comp_perc = round(($art_comp / max($art_total, 1)) * 100, 2);
         $art_not_comp_perc = round(($art_not_comp / max($art_total, 1)) * 100, 2);
+        $informative_items = $law->informative_items_count;
+        $total_items = $law->items_count;
+        $informative_perc = round(($informative_items / max($total_items, 1)) * 100, 2);
 
         $levels = [
             '1' => 'Initial',
@@ -22,11 +25,17 @@
 
         $avgRounded = round($avgMaturity, 2);
         $avgNearest = round($avgMaturity);
-        $levelName = $levels[$avgNearest] ?? 'N/A';
+        $levelName = $levels[$avgNearest] ?? 'Incomplete';
     @endphp
 
+    <div class="flex justify-between">
+        <h1 class="text-xl font-bold">Metrics</h1>
+        <a href="{{ route('laws.show', ['law' => $law]) }}" class="btn btn-neutral btn-sm">Go back</a>
 
-    <h1 class="text-xl font-bold">Metrics</h1>
+    </div>
+
+
+
     <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         <div class="stats shadow">
             <div class="stat">
@@ -49,10 +58,30 @@
                 <div class="stat-desc">Overall score {{ $avgRounded }}</div>
             </div>
         </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Informative items</div>
+                <div class="font-bold text-info">{{ $informative_items }}</div>
+                <div class="stat-desc">{{ $informative_perc }}% of items</div>
+            </div>
+        </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Total items</div>
+                <div class="font-bold">{{ $total_items }}</div>
+                <div class="stat-desc">For "{{ $law->law_name }}"</div>
+            </div>
+        </div>
+
+
     </section>
 
+    <section class="my-4 grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div id="pie_chart"></div>
+        <div id="bar_chart"></div>
+    </section>
 
-    <h2 class="text-lg font-bold my-3">Non compliant articles</h2>
+    <h2 class="text-lg font-bold my-3">Articles not in compliance</h2>
     <div class="h-96 overflow-x-auto bg-base-100 rounded-md">
         <table class="table table-pin-rows z-0">
             @foreach ($law->articles as $article)
@@ -62,7 +91,7 @@
                         <th>{{ $article['article_description'] }}</th>
                         <th class="text-right">
                             <div class="text-xs">
-                                <span class="text-primary">{{ $article->compliant_items_count }}</span> of <span
+                                <span class="text-primary">{{ $article->compliance_items_count }}</span> of <span
                                     class="">{{ $article->all_items_count }}</span>
                                 <i class="fa-solid fa-list-check"></i>
                             </div>
@@ -100,7 +129,7 @@
                                         <label class="form-control">
                                             <div class="label">
                                                 <span class="label-text">
-                                                    <i class="fa-solid fa-circle-info"></i>
+                                                    <i class="fa-solid fa-layer-group"></i>
                                                     Maturity level
                                                 </span>
                                             </div>
@@ -143,5 +172,13 @@
 @endsection
 
 @push('scripts')
+    <script>
+        window.maturity = @json($maturityLevels);
+        window.items = @json([
+            'in_complaince' => $art_comp_perc,
+            'non_complaince' => $art_not_comp_perc
+        ]);
+    </script>
+
     @vite(['resources/js/laws/report.js'])
 @endpush
