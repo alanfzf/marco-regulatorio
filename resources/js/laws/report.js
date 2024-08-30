@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
   Highcharts.chart("bar_chart", {
     chart: {
       type: "column",
+      backgroundColor: "oklch(var(--b1))",
     },
     title: {
       text: "Maturity levels",
