@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\ArticleItem;
 use App\Models\Law;
+use App\Models\MaturityLevel;
 use App\Repositories\Law\LawRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,19 +62,15 @@ class LawController extends Controller
     public function show(Law $law)
     {
 
-        /*
-         * tested_articles: cuenta todos los articulos que tienen que ser evaluados
-         * completed_articles: cuenta todos los articulos que tienen sus items como completados
-         * es decir que no sean informativos y que se completen, y si es ifnormativo el estado
-         * de si esta completado o no es irrelevante
-         */
-
-        $law->load('articles.items')->loadCount([
+        $law->load('articles.items.maturity')->loadCount([
             'articles',
-            'articles as compliant_articles' => function ($query) {
+            'articles as compliance_articles' => function ($query) {
+                // buscar items que no tengan ni item_is_informative ni maturity menor a 1
                 $query->whereDoesntHave('items', function ($query) {
                     $query->where('item_is_informative', false)
-                          ->where('item_is_complete', false);
+                    ->whereHas('maturity', function ($mquery) {
+                        $mquery->where('maturity_level', '<', 1);
+                    });
                 });
             },
         ]);
@@ -117,6 +114,74 @@ class LawController extends Controller
     {
         $this->lawRepository->delete($law->id);
         return redirect(route('laws.index'));
+    }
+
+    public function report(Law $law)
+    {
+
+        $law->loadCount([
+                // count the articles and their stats
+                'articles',
+                'articles as articles_in_compliance' => function ($query) {
+                    $query->whereDoesntHave('items', function ($query) {
+                        $query->where('item_is_informative', false)
+                            ->whereHas('maturity', function ($mquery) {
+                                $mquery->where('maturity_level', '<', 1);
+                            });
+                    });
+                },
+            'items',
+            'items as informative_items_count' => function ($query) {
+                $query->where('item_is_informative', true);
+            },
+
+
+            ])
+            ->load(['articles' => function ($query) {
+                // load the article items and their stats
+                $query->withCount([
+                    'items as all_items_count',
+                    'items as compliance_items_count' => function ($query) {
+                        // Count items where either item_is_informative  or they maturity level is greater than or equal to 1
+                        $query->where(function ($query) {
+                            $query->where('item_is_informative', true)
+                                ->orWhereHas('maturity', function ($mquery) {
+                                    $mquery->where('maturity_level', '>=', 1);
+                                });
+                        });
+                    },
+                ]);
+                // second query
+                $query->whereHas('items', function ($query) {
+                    $query->where('item_is_informative', false)
+                        ->whereHas('maturity', function ($mquery) {
+                            $mquery->where('maturity_level', '<', 1);
+                        });
+                });
+            }, 'articles.items.maturity']);
+
+
+        // CALCULATE THE AVERAGE MATURITY LEVEL
+        $avgMaturity = Law::find($law->id)
+            ->articles()
+            ->join('article_items', 'articles.id', '=', 'article_items.article_id')
+            ->join('maturity_levels', 'article_items.maturity_id', '=', 'maturity_levels.id')
+            ->avg('maturity_levels.maturity_level');
+
+        // CALCULATE HOW MANY ITEMS ARE IN EACH MATURITY LEVEL
+        $maturityLevels = MaturityLevel::select('maturity_levels.maturity_name', DB::raw('COUNT(article_items.id) as article_item_count'))
+            ->leftJoin('article_items', 'maturity_levels.id', '=', 'article_items.maturity_id')
+            ->leftJoin('articles', 'article_items.article_id', '=', 'articles.id')
+            ->leftJoin('laws', 'articles.law_id', '=', 'laws.id')
+            ->where(function ($query) use ($law) {
+                $query->where('laws.id', $law->id)
+                      ->orWhereNull('laws.id');
+            })->groupBy('maturity_levels.maturity_name')
+            ->orderBy('maturity_levels.maturity_level')
+            ->get();
+
+
+        return view('laws.report', compact('law', 'avgMaturity', 'maturityLevels'));
     }
 
     public function upload(Request $request, Law $law)

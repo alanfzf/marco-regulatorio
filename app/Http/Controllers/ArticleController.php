@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\ArticleItem;
 use App\Models\Law;
 use Illuminate\Http\Request;
 
@@ -81,27 +80,4 @@ class ArticleController extends Controller
     }
 
 
-    public function validate_items(Request $request, Law $law, Article $article)
-    {
-
-        $valid = $request->validate([
-            'items' => 'nullable|array',
-            'items.*.*' => 'required|in:on',
-        ]);
-
-        // disable all items.
-        $article->items()->update(
-            ['item_is_complete' => false]
-        );
-
-        foreach ($valid['items'] ?? [] as $item => $value) {
-            // update only found items
-            ArticleItem::findOrFail($item)->update(
-                ['item_is_complete' => $value === 'on']
-            );
-        }
-
-
-        return redirect(route('articles.show', ['law' => $law,'article' => $article->id]));
-    }
 }

@@ -12,7 +12,10 @@ class LawRepository implements LawRepositoryInterface
             'articles',
             'items',
             'items as complete_items_count' => function ($query) {
-                $query->where('item_is_complete', true)->orWhere('item_is_informative', true);
+                $query->where('item_is_informative', true)
+                    ->orWhereHas('maturity', function ($mquery) {
+                        $mquery->where('maturity_level', '>=', 1);
+                    });
             },
         ])->get();
 

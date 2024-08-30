@@ -36,7 +36,10 @@ class ItemController extends Controller
             'item_description' => 'nullable|string|max:255',
             'item_is_informative' => 'required|boolean',
         ]);
-        $article->items()->save(new ArticleItem($valid));
+
+        $item = new ArticleItem($valid);
+        $item->maturity()->associate(1); // 1 is incomplete.
+        $article->items()->save($item);
 
         return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
     }
@@ -78,13 +81,8 @@ class ItemController extends Controller
     public function comment(Request $request, Law $law, Article $article, ArticleItem $item)
     {
 
-        $request->merge([
-            'item_is_complete' => $request->has('item_is_complete')
-        ]);
-
-
         $valid = $request->validate([
-            'item_is_complete' => 'required|boolean',
+            'maturity_id' => 'required|exists:maturity_levels,id',
             'item_comment' => 'nullable|string|max:255',
         ]);
 

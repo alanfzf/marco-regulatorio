@@ -3,10 +3,10 @@
 @section('main')
     @php
         $articles = $law->articles_count;
-        $compliant = $law->compliant_articles;
-        $non_compliant = $articles - $compliant;
-        $compliant_percentage = round(($compliant / max($articles, 1)) * 100, 2);
-        $non_compliant_percentage = round(($non_compliant / max($articles, 1)) * 100, 2);
+        $compliance = $law->compliance_articles;
+        $non_compliance = $articles - $compliance;
+        $compliance_percentage = round(($compliance / max($articles, 1)) * 100, 2);
+        $non_compliance_percentage = round(($non_compliance / max($articles, 1)) * 100, 2);
     @endphp
 
     <div class="flex w-full flex-col border-opacity-50">
@@ -21,18 +21,18 @@
             <div class="stat-figure text-info">
                 <i class="fa-solid fa-check"></i>
             </div>
-            <div class="stat-title">Compliant</div>
-            <div class="stat-value text-info">{{ $compliant }}</div>
-            <div class="stat-desc">{{ $compliant_percentage }}% of articles</div>
+            <div class="stat-title">In complaince</div>
+            <div class="stat-value text-info">{{ $compliance }}</div>
+            <div class="stat-desc">{{ $compliance_percentage }}% of articles</div>
         </div>
 
         <div class="stat">
             <div class="stat-figure text-error">
                 <i class="fa-solid fa-xmark"></i>
             </div>
-            <div class="stat-title">Non compliant</div>
-            <div class="stat-value text-error">{{ $non_compliant }}</div>
-            <div class="stat-desc">{{ $non_compliant_percentage }}% of articles</div>
+            <div class="stat-title">Not in compliance</div>
+            <div class="stat-value text-error">{{ $non_compliance }}</div>
+            <div class="stat-desc">{{ $non_compliance_percentage }}% of articles</div>
         </div>
 
         <div class="stat">
@@ -41,7 +41,7 @@
             </div>
             <div class="stat-title">Total articles</div>
             <div class="stat-value text-success">{{ $articles }}</div>
-            <div class="stat-desc">Overall compliance {{ $compliant }}/{{ $articles }}</div>
+            <div class="stat-desc">Overall compliance {{ $compliance }}/{{ $articles }}</div>
         </div>
     </div>
 
@@ -97,7 +97,8 @@
                             $all = count($items);
                             $count = count(
                                 array_filter($items, function ($item) {
-                                    return $item['item_is_informative'] == 1 || $item['item_is_complete'] == 1;
+                                    return $item['item_is_informative'] == 1 ||
+                                        $item['maturity']['maturity_level'] >= 1;
                                 })
                             );
                         @endphp
@@ -134,7 +135,7 @@
         <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
 
 
-        <a href="" class="btn btn-success">See detailed report</a>
+        <a href="{{ route('laws.report', ['law' => $law]) }}" class="btn btn-success">See detailed report</a>
         {{-- empieza modal --}}
         <label for="massupload" class="btn btn-primary">
             Mass upload
@@ -170,7 +171,7 @@
 
 @push('scripts')
     <script>
-        window.compliance = @js(['complaint' => $compliant_percentage, 'non_compliant' => $non_compliant_percentage])
+        window.compliance = @js(['in_complaince' => $compliance_percentage, 'non_complaince' => $non_compliance_percentage])
     </script>
     @vite(['resources/js/laws/compliance_chart.js'])
 @endpush

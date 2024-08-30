@@ -15,13 +15,18 @@ class ArticleItem extends Model
         'item_title',
         'item_description',
         'item_is_informative',
-        'item_is_complete',
         'item_comment',
-        'article_id'
+        'maturity_id',
+        'article_id',
     ];
 
     public function article()
     {
         return $this->belongsTo(Article::class);
+    }
+
+    public function maturity()
+    {
+        return $this->belongsTo(MaturityLevel::class, 'maturity_id');
     }
 }
