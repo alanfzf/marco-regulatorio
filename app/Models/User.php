@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function laws()
+    {
+        return $this->hasMany(Law::class, 'law_owner_user_id');
+    }
 }

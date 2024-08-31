@@ -17,8 +17,14 @@ class Law extends Model
         'law_publish_date',
         'law_url_reference',
         'law_image',
+        'law_owner_user_id'
     ];
 
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'law_owner_user_id');
+    }
 
     public function articles()
     {
