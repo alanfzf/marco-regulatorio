@@ -172,6 +172,7 @@ class LawController extends Controller
             ->articles()
             ->join('article_items', 'articles.id', '=', 'article_items.article_id')
             ->join('maturity_levels', 'article_items.maturity_id', '=', 'maturity_levels.id')
+            ->where('article_items.item_is_informative', false)
             ->avg('maturity_levels.maturity_level');
 
         // CALCULATE HOW MANY ITEMS ARE IN EACH MATURITY LEVEL
@@ -179,14 +180,23 @@ class LawController extends Controller
             ->leftJoin('article_items', 'maturity_levels.id', '=', 'article_items.maturity_id')
             ->leftJoin('articles', 'article_items.article_id', '=', 'articles.id')
             ->leftJoin('laws', 'articles.law_id', '=', 'laws.id')
+            ->where('article_items.item_is_informative', false)
             ->where(function ($query) use ($law) {
                 $query->where('laws.id', $law->id)
-                      ->orWhereNull('laws.id');
-            })->groupBy('maturity_levels.maturity_name')
+                ->where('article_items.item_is_informative', false);
+            })
+            ->groupBy('maturity_levels.maturity_name')
             ->orderBy('maturity_levels.maturity_level')
-            ->get();
+            ->get()->toArray();
 
+        $allMaturityLevels = MaturityLevel::orderBy('maturity_level')
+            ->get(['maturity_name'])
+            ->map(function ($item) {
+                return ['maturity_name' => $item->maturity_name, 'article_item_count' => 0];
+            })
+            ->toArray();
 
+        $maturityLevels = array_replace($allMaturityLevels, $maturityLevels);
         return view('laws.report', compact('law', 'avgMaturity', 'maturityLevels'));
     }
 
@@ -204,15 +214,14 @@ class LawController extends Controller
 
 
 
-        foreach($contents as $line) {
+        foreach($contents as $index => $line) {
             $data = str_getcsv($line);
 
-            if(count($data) !== 4) {
-                throw new \Exception('Invalid CSV format');
+            if(count($data) !== 6) {
+                throw new \Exception('Invalid CSV format, line: '. $index);
             }
 
-            [$article, $title, $description, $is_informative] = $data;
-
+            [$article, $title, $description, $is_informative, $comment, $level] = $data;
 
             if(array_key_exists($article, $articles)) {
                 // push a new item to the article
@@ -220,6 +229,8 @@ class LawController extends Controller
                     'name' => $title,
                     'description' => $description,
                     'is_informative' => $is_informative === 'TRUE',
+                    'comment' => $comment,
+                    'level' => $level,
                 ];
             } else {
                 // create the base article
@@ -236,7 +247,6 @@ class LawController extends Controller
 
             $law->articles()->delete();
             foreach($articles as $article) {
-
                 // CREATE THE ARTICLE
                 $art = new Article();
                 $art->article_name = $article['name'];
@@ -246,10 +256,14 @@ class LawController extends Controller
 
                 $articleItems = [];
                 foreach($article['items'] as $item) {
+                    $maturity = MaturityLevel::where('maturity_level', $item['level'])
+                        ->firstOrFail();
                     $it = new ArticleItem();
                     $it->item_title = $item['name'];
                     $it->item_description = $item['description'];
                     $it->item_is_informative = $item['is_informative'];
+                    $it->item_comment = $item['comment'];
+                    $it->maturity()->associate($maturity);
                     $articleItems[] = $it;
                 }
 
