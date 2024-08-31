@@ -14,13 +14,16 @@
     <div class="flex-none">
         <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                <div class="avatar placeholder">
+                    <div class="bg-neutral text-neutral-content rounded-full">
+                        <span>N/A</span>
+                    </div>
+                </div>
 
             </div>
             <ul tabindex="0" class="menu menu-sm dropdown-content bg-neutral rounded-box z-[1] mt-3 w-52 p-2 shadow">
                 <li>
-                    <a href="#">
-                        Perfil
-                    </a>
+                    <button type="button">Perfil</button>
                 </li>
                 <li>
                     <label class="w-full swap swap-rotate">

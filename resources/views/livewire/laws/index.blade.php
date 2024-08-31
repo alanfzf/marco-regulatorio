@@ -2,15 +2,20 @@
     <div class="flex w-full flex-col border-opacity-50">
         <div class="divider">Law compliance</div>
     </div>
-    <div class="flex flex-row gap-3 mb-5">
-        <label class="input input-bordered flex items-center gap-2 w-full" wire:model.live="search">
+    <div class="flex flex-row gap-3 mb-5 justify-center">
+        <label class="input input-bordered flex items-center gap-2 w-full md:w-1/3" wire:model.live="search">
             <input type="text" class="grow" placeholder="Search" maxlength="50" />
             <i class="fa-solid fa-magnifying-glass"></i>
         </label>
 
-        <a class="btn btn-success" href="{{ route('laws.create') }}">
-            Add new Law <i class="fa-solid fa-gavel"></i>
-        </a>
+        @role('admin')
+            <a class="btn btn-success" href="{{ route('laws.create') }}">
+                <span class="max-sm:hidden">
+                    Add new Law
+                </span>
+                <i class="fa-solid fa-gavel"></i>
+            </a>
+        @endrole
     </div>
 
     <div class="flex flex-row flex-wrap gap-3 items-center justify-center" wire:loading.flex>
