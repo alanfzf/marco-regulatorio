@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -13,17 +15,53 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        //
 
-        $userData = [
-            'name' => 'Alan',
-            'email' => 'alandavidg13@gmail.com',
+        $users = [
+            [
+                'name' => 'Alan',
+                'email' => 'alandavidg13@gmail.com',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Executive',
+                'email' => 'executive@gmail.com',
+                'role' => 'executive',
+            ],
+            [
+                'name' => 'Auditor #1',
+                'email' => 'auditor@gmail.com',
+                'role' => 'auditor',
+            ],
+            [
+                'name' => 'Auditor #2',
+                'email' => 'auditor2@gmail.com',
+                'role' => 'auditor',
+            ],
         ];
 
-        $valuesToUpdate = [
-            'password' => Hash::make('12345678'),
+        $roles = [
+            [
+                'name' => 'admin',
+            ],
+            [
+                'name' => 'auditor',
+            ],
+            [
+                'name' => 'executive',
+            ],
         ];
 
-        User::updateOrCreate($userData, $valuesToUpdate);
+        DB::transaction(function () use ($users, $roles) {
+            foreach($roles as $role) {
+                $roles = Role::updateOrCreate($role);
+            }
+
+            foreach($users as $user) {
+                $role = $user['role'];
+                unset($user['role']);
+                $user = User::updateOrCreate($user, [ 'password' => Hash::make('12345678')]);
+                $user->syncRoles([$role]);
+            }
+        });
     }
 }

@@ -9,17 +9,19 @@
     <div class="mb-3 flex justify-end gap-3">
 
         <a href="{{ route('laws.show', ['law' => $law]) }}" class="btn btn-neutral btn-sm">Go back</a>
-        <a href="{{ route('items.create', ['law' => $law, 'article' => $article]) }}" class="btn btn-sm btn-success">Create
-            new
-            item</a>
+        @role('admin')
+            <a href="{{ route('items.create', ['law' => $law, 'article' => $article]) }}" class="btn btn-sm btn-success">
+                Create new item
+            </a>
 
-        <form method="POST" enctype="multipart/form-data"
-            onsubmit="return confirm('Do you really want to delete this article?')"
-            action="{{ route('articles.destroy', ['law' => $law, 'article' => $article]) }}">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-error w-full">Delete article</button>
-        </form>
+            <form method="POST" enctype="multipart/form-data"
+                onsubmit="return confirm('Do you really want to delete this article?')"
+                action="{{ route('articles.destroy', ['law' => $law, 'article' => $article]) }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-error w-full">Delete article</button>
+            </form>
+        @endrole
     </div>
 
     <section class="bg-base-100 rounded-md shadow-md mb-3">
@@ -31,7 +33,9 @@
                         <th>Type</th>
                         <th>Compliance</th>
                         <th>Manage</th>
-                        <th>View</th>
+                        @role('admin')
+                            <th>View</th>
+                        @endrole
                     </tr>
                 </thead>
                 <tbody>
@@ -124,16 +128,18 @@
                                 {{-- end modal --}}
                             </td>
 
-                            <td>
-                                <a class="btn btn-xs ghost"
-                                    href="{{ route('items.edit', ['law' => $law, 'article' => $article, 'item' => $item]) }}">
-                                    <span class="max-sm:hidden">
-                                        Edit
-                                    </span>
-                                    <i class="fa-solid fa-gears"></i>
-                                </a>
-                            </td>
-                        </tr>
+                            @role('admin')
+                                <td>
+                                    <a class="btn btn-xs ghost"
+                                        href="{{ route('items.edit', ['law' => $law, 'article' => $article, 'item' => $item]) }}">
+                                        <span class="max-sm:hidden">
+                                            Edit
+                                        </span>
+                                        <i class="fa-solid fa-gears"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endrole
                     @endforeach
                 </tbody>
             </table>

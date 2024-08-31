@@ -46,4 +46,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function laws()
+    {
+        return $this->belongsToMany(Law::class, 'law_managers')
+            ->using(LawManager::class)->withTimestamps();
+    }
 }

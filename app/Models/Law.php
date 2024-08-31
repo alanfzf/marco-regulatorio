@@ -19,6 +19,11 @@ class Law extends Model
         'law_image',
     ];
 
+    public function managers()
+    {
+        return $this->belongsToMany(User::class, 'law_managers')
+            ->using(LawManager::class)->withTimestamps();
+    }
 
     public function articles()
     {

@@ -47,37 +47,33 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 h-96">
 
-
-
         <div class="bg-base-100 rounded-md p-3 overflow-x-auto shadow-md">
             <div class="flex flex-row justify-between mb-3">
                 <h2 class="text-center font-bold"><i class="fa-solid fa-newspaper"></i> Articles </h2>
 
-                <label for="create_article" class="btn btn-xs ghost">
-                    <i class="fa-solid fa-plus"></i>
-                    <span class="max-sm:hidden">
-                        Add new article
-                    </span>
-                </label>
-                <input type="checkbox" id="create_article" class="modal-toggle" />
-                <div class="modal" role="dialog">
-                    <div class="modal-box">
-                        <h3 class="text-lg font-bold">Add new article</h3>
-                        <form method="POST" enctype="multipart/form-data"
-                            action="{{ route('articles.store', ['law' => $law->id]) }}">
-                            @csrf
-                            <input type="text" class="input input-bordered w-full input-sm" name="article_name"
-                                required />
-                            <button type="submit" class="btn btn-primary btn-sm mt-3">Create new law</button>
-                        </form>
+                @role('admin')
+                    <label for="create_article" class="btn btn-xs ghost">
+                        <i class="fa-solid fa-plus"></i>
+                        <span class="max-sm:hidden">
+                            Add new article
+                        </span>
+                    </label>
+                    <input type="checkbox" id="create_article" class="modal-toggle" />
+                    <div class="modal" role="dialog">
+                        <div class="modal-box">
+                            <h3 class="text-lg font-bold">Add new article</h3>
+                            <form method="POST" enctype="multipart/form-data"
+                                action="{{ route('articles.store', ['law' => $law->id]) }}">
+                                @csrf
+                                <input type="text" class="input input-bordered w-full input-sm" name="article_name"
+                                    required />
+                                <button type="submit" class="btn btn-primary btn-sm mt-3">Create new law</button>
+                            </form>
+                        </div>
+                        <label class="modal-backdrop" for="create_article">Close</label>
                     </div>
-                    <label class="modal-backdrop" for="create_article">Close</label>
-                </div>
+                @endrole
                 {{-- form end  --}}
-
-
-
-
             </div>
             <table class="table table-zebra">
                 <!-- head -->
@@ -86,7 +82,9 @@
                         <th></th>
                         <th>Article</th>
                         <th>Compliance status</th>
-                        <th>View</th>
+                        @hasanyrole('admin|auditor')
+                            <th>View</th>
+                        @endhasanyrole
                     </tr>
                 </thead>
                 <tbody>
@@ -104,7 +102,7 @@
                         @endphp
 
                         <tr>
-                            <th>{{ $index }}</th>
+                            <th>{{ $index + 1 }}</th>
                             <td>
                                 <i class="fa-regular fa-paste"></i> {{ $article->article_name }}
                             </td>
@@ -115,11 +113,14 @@
                                     <i class="fa-solid fa-list-check"></i>
                                 </div>
                             </td>
-                            <td>
-                                <a class="btn btn-ghost btn-xs"
-                                    href="{{ route('articles.show', ['law' => $law, 'article' => $article]) }}">details</a>
-                            </td>
-                        </tr>
+
+                            @hasanyrole('admin|auditor')
+                                <td>
+                                    <a class="btn btn-ghost btn-xs"
+                                        href="{{ route('articles.show', ['law' => $law, 'article' => $article]) }}">details</a>
+                                </td>
+                            </tr>
+                        @endhasanyrole
                     @endforeach
                 </tbody>
             </table>
@@ -135,37 +136,41 @@
         <a href="{{ route('laws.index') }}" class="btn btn-neutral ">Go back</a>
 
 
-        <a href="{{ route('laws.report', ['law' => $law]) }}" class="btn btn-success">See detailed report</a>
-        {{-- empieza modal --}}
-        <label for="massupload" class="btn btn-primary">
-            Mass upload
-        </label>
+        @hasanyrole('admin|executive')
+            <a href="{{ route('laws.report', ['law' => $law]) }}" class="btn btn-success">See detailed report</a>
+        @endhasanyrole
+        @role('admin')
+            {{-- empieza modal --}}
+            <label for="massupload" class="btn btn-primary">
+                Mass upload
+            </label>
 
-        <input type="checkbox" id="massupload" class="modal-toggle" />
-        <div class="modal" role="dialog">
-            <div class="modal-box">
-                <form action="{{ route('laws.upload', ['law' => $law]) }}" method="POST" enctype='multipart/form-data'>
-                    @csrf
-                    <h3 class="text-lg font-bold mb-3">Mass upload of articles</h3>
-                    <input type="file" name="articles" class="file-input file-input-bordered file-input-sm mb-3"
-                        required />
-                    <button type="submit" class="btn btn-primary btn-sm">Submit</button>
-                </form>
+            <input type="checkbox" id="massupload" class="modal-toggle" />
+            <div class="modal" role="dialog">
+                <div class="modal-box">
+                    <form action="{{ route('laws.upload', ['law' => $law]) }}" method="POST" enctype='multipart/form-data'>
+                        @csrf
+                        <h3 class="text-lg font-bold mb-3">Mass upload of articles</h3>
+                        <input type="file" name="articles" class="file-input file-input-bordered file-input-sm mb-3"
+                            required />
+                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                    </form>
+                </div>
+                <label class="modal-backdrop" for="massupload">Close</label>
             </div>
-            <label class="modal-backdrop" for="massupload">Close</label>
-        </div>
-        {{-- termina modal --}}
+            {{-- termina modal --}}
 
-        <a href="{{ route('laws.edit', ['law' => $law->id]) }}" class="btn btn-info">Edit</a>
+            <a href="{{ route('laws.edit', ['law' => $law->id]) }}" class="btn btn-info">Edit</a>
 
-        <form action="{{ route('laws.destroy', ['law' => $law]) }}" method="POST"
-            onsubmit="return confirm('Do you really want to archive this law?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-error w-full">
-                Archive law
-            </button>
-        </form>
+            <form action="{{ route('laws.destroy', ['law' => $law]) }}" method="POST"
+                onsubmit="return confirm('Do you really want to archive this law?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-error w-full">
+                    Archive law
+                </button>
+            </form>
+        @endrole
     </div>
 @endsection
 

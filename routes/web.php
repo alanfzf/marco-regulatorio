@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LawController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,6 +17,23 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
     Route::post('loogut', [AuthController::class, 'logout'])->name('auth.logout');
 });
+
+
+Route::group(['prefix' => 'teams', 'middleware' => ['auth', 'role:admin']], function () {
+    // show all laws here.
+    Route::get('show', [TeamController::class, 'show'])
+        ->name('teams.show');
+
+    // show the users that can be associated to a specific law.
+    Route::get('law/{law}', [TeamController::class, 'users'])
+        ->name('teams.users');
+
+    // modify the team for a specific law.
+    Route::patch('law/{law}', [TeamController::class, 'update'])
+        ->name('teams.update');
+});
+
+
 
 // **** RUTA PARA ITEMS ****
 Route::patch('laws/{law}/articles/{article}/items/{item}/comment', [ItemController::class, 'comment'])
