@@ -18,19 +18,19 @@ class UserSeeder extends Seeder
 
         $users = [
             [
-                'name' => 'entidad2',
-                'email' => 'entidad2@gmail.com',
-            ],
-            [
                 'name' => 'Alan',
                 'email' => 'alandavidg13@gmail.com',
             ],
             [
-                'name' => 'Auditor #1',
+                'name' => 'Banco Test',
+                'email' => 'entidad2@gmail.com',
+            ],
+            [
+                'name' => 'Auditor #1 (Banco test)',
                 'email' => 'auditor@gmail.com',
             ],
             [
-                'name' => 'Auditor #2',
+                'name' => 'Auditor #2 (empleado alan)',
                 'email' => 'auditor2@gmail.com',
             ],
         ];
