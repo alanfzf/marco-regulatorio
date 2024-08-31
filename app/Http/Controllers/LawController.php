@@ -9,6 +9,7 @@ use App\Models\MaturityLevel;
 use App\Repositories\Law\LawRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class LawController extends Controller
 {
@@ -39,7 +40,6 @@ class LawController extends Controller
      */
     public function store(Request $request)
     {
-
         $values = $request->validate([
             'law_name' => 'required|string|max:255',
             'law_description' => 'nullable|string',
@@ -52,7 +52,9 @@ class LawController extends Controller
             $values['law_image'] = $request->file('law_image')->store();
         }
 
-        $this->lawRepository->create($values);
+        $law = $this->lawRepository->create($values);
+        $law->managers()->attach($request->user()->id);
+
         return redirect(route('laws.index'));
     }
 
@@ -61,7 +63,7 @@ class LawController extends Controller
      */
     public function show(Law $law)
     {
-
+        Gate::authorize('view', $law);
         $law->load('articles.items.maturity')->loadCount([
             'articles',
             'articles as compliance_articles' => function ($query) {
@@ -83,6 +85,7 @@ class LawController extends Controller
      */
     public function edit(Law $law)
     {
+        Gate::authorize('update', $law);
         return view('laws.edit', compact('law'));
     }
 
@@ -91,6 +94,8 @@ class LawController extends Controller
      */
     public function update(Request $request, Law $law)
     {
+
+        Gate::authorize('update', $law);
         $values = $request->validate([
             'law_name' => 'required|string|max:255',
             'law_description' => 'nullable|string',
@@ -112,13 +117,14 @@ class LawController extends Controller
      */
     public function destroy(Law $law)
     {
+        Gate::authorize('delete', $law);
         $this->lawRepository->delete($law->id);
         return redirect(route('laws.index'));
     }
 
     public function report(Law $law)
     {
-
+        Gate::authorize('report', $law);
         $law->loadCount([
                 // count the articles and their stats
                 'articles',
@@ -186,7 +192,7 @@ class LawController extends Controller
 
     public function upload(Request $request, Law $law)
     {
-
+        Gate::authorize('massUpload', $law);
         $request->validate([
             'articles' => 'required|file|mimes:csv',
         ]);

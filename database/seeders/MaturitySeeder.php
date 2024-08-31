@@ -48,7 +48,7 @@ class MaturitySeeder extends Seeder
 
         // Loop through the array and create each maturity level
         foreach ($maturityLevels as $level) {
-            MaturityLevel::create($level);
+            MaturityLevel::updateOrCreate($level, []);
         }
 
     }

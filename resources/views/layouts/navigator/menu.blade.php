@@ -34,6 +34,13 @@
             <div class="drawer-side">
                 <label for="main-drawer" aria-label="close sidebar" class="w-full drawer-overlay"></label>
                 <ul class="min-h-full p-4 menu bg-neutral text-neutral-content w-80">
+
+                    <li>
+                        <a href="{{ route('laws.index') }}"> Law list <i class="fa-solid fa-scale-balanced"></i></a>
+                    </li>
+                    <li>
+                        <a href="#">Team <i class="fa-solid fa-users"></i></a>
+                    </li>
                 </ul>
             </div>
         </div>

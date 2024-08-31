@@ -49,6 +49,7 @@ class User extends Authenticatable
 
     public function laws()
     {
-        return $this->hasMany(Law::class, 'law_owner_user_id');
+        return $this->belongsToMany(Law::class, 'law_managers')
+            ->using(LawManager::class)->withTimestamps();
     }
 }

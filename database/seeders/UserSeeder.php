@@ -15,15 +15,33 @@ class UserSeeder extends Seeder
     {
         //
 
-        $userData = [
-            'name' => 'Alan',
-            'email' => 'alandavidg13@gmail.com',
+
+        $users = [
+            [
+                'name' => 'entidad2',
+                'email' => 'entidad2@gmail.com',
+            ],
+            [
+                'name' => 'Alan',
+                'email' => 'alandavidg13@gmail.com',
+            ],
+            [
+                'name' => 'Auditor #1',
+                'email' => 'auditor@gmail.com',
+            ],
+            [
+                'name' => 'Auditor #2',
+                'email' => 'auditor2@gmail.com',
+            ],
         ];
 
         $valuesToUpdate = [
             'password' => Hash::make('12345678'),
         ];
 
-        User::updateOrCreate($userData, $valuesToUpdate);
+        foreach($users as $user) {
+            User::updateOrCreate($user, $valuesToUpdate);
+        }
+
     }
 }
