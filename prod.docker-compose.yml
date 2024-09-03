@@ -34,7 +34,7 @@ services:
         - certbot:/etc/letsencrypt
         - certbot:/var/www/certbot
       environment:
-        - APP_URL=${APP_URL}
+        - APP_URL=${NGINX_URL}
         - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
       networks:
         - marco-regulatorio
@@ -45,7 +45,7 @@ services:
     volumes:
       - certbot:/etc/letsencrypt
       - certbot:/var/www/certbot
-    command: certonly --standalone -w /var/www/certbot --email alandavidg13@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${APP_URL}
+    command: certonly --standalone -w /var/www/certbot --email alandavidg13@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${NGINX_URL}
     ports:
       - "80:80"
 networks:

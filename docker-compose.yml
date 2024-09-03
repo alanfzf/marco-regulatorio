@@ -1,7 +1,7 @@
 services:
   # LARAVEL CONTAINER
   laravel: &laravel
-    image: alanfzf/laravel-dev:latest
+    image: alanfzf/laravel-dev:arm
     tty: true
     ports:
       - "8000:80"
