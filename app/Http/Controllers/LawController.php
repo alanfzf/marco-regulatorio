@@ -139,11 +139,7 @@ class LawController extends Controller
             'items',
             'items as informative_items_count' => function ($query) {
                 $query->where('item_is_informative', true);
-            },
-
-
-            ])
-            ->load(['articles' => function ($query) {
+            }])->load(['articles' => function ($query) {
                 // load the article items and their stats
                 $query->withCount([
                     'items as all_items_count',
@@ -187,16 +183,21 @@ class LawController extends Controller
             })
             ->groupBy('maturity_levels.maturity_name')
             ->orderBy('maturity_levels.maturity_level')
-            ->get()->toArray();
+           ->get()
+            ->keyBy('maturity_name') // Convert to associative array using maturity_name as key
+            ->toArray();
 
         $allMaturityLevels = MaturityLevel::orderBy('maturity_level')
             ->get(['maturity_name'])
-            ->map(function ($item) {
-                return ['maturity_name' => $item->maturity_name, 'article_item_count' => 0];
-            })
-            ->toArray();
+            ->mapWithKeys(function ($item) {
+                return [$item->maturity_name => ['maturity_name' => $item->maturity_name, 'article_item_count' => 0]];
+            })->toArray();
 
-        $maturityLevels = array_replace($allMaturityLevels, $maturityLevels);
+
+        $maturityLevels = array_merge($allMaturityLevels, $maturityLevels);
+
+
+
         return view('laws.report', compact('law', 'avgMaturity', 'maturityLevels'));
     }
 
@@ -245,7 +246,8 @@ class LawController extends Controller
 
         DB::transaction(function () use ($articles, $law) {
 
-            $law->articles()->delete();
+            $law->articles()->forceDelete();
+
             foreach($articles as $article) {
                 // CREATE THE ARTICLE
                 $art = new Article();

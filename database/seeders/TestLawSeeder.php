@@ -17,40 +17,40 @@ class TestLawSeeder extends Seeder
      */
     public function run(): void
     {
-
-        // Create a Law
+        // Encuentra al usuario con ID 1
         $user = User::findOrFail(1);
 
-        $law = Law::create([
-            'law_name' => 'Sample Law',
-            'law_description' => 'Description of the sample law.',
-            'law_publish_date' => now(),
-            'law_url_reference' => 'http://example.com/law',
-        ]);
+        // Crea una nueva ley
+        $law = new Law();
+        $law->law_name = 'Sample Law';
+        $law->law_description = 'Description of the sample law.';
+        $law->law_publish_date = now();
+        $law->law_url_reference = 'http://example.com/law';
+        $law->save();
 
+        // Asocia la ley al usuario
         $user->laws()->attach($law);
 
-        // Create multiple Articles for this Law
-        $articles = Article::factory()->count(15)->create([
-            'law_id' => $law->id,
-            'article_name' => Str::random(16),
-        ]);
+        // Crea múltiples artículos para esta ley
+        for ($i = 0; $i < 15; $i++) {
+            $article = new Article();
+            $article->law_id = $law->id;
+            $article->article_name = Str::random(16);
+            $article->save();
 
-        // Create multiple ArticleItems for each Article
-        foreach ($articles as $article) {
+            // Encuentra el nivel de madurez con ID 1
             $maturity = MaturityLevel::findOrFail(1);
-            $informative = rand(0, 1) == 1;
 
-            ArticleItem::factory()->count(5)->create([
-                'article_id' => $article->id,
-                'item_title' => Str::random(16),
-                'item_description' => 'Description for the item.',
-                'item_is_informative' => $informative,
-                'maturity_id' => $maturity->id,
-            ]);
-
-
+            // Crea múltiples elementos de artículo para cada artículo
+            for ($j = 0; $j < 5; $j++) {
+                $articleItem = new ArticleItem();
+                $articleItem->article_id = $article->id;
+                $articleItem->item_title = Str::random(16);
+                $articleItem->item_description = 'Description for the item.';
+                $articleItem->item_is_informative = rand(0, 1) == 1;
+                $articleItem->maturity_id = $maturity->id;
+                $articleItem->save();
+            }
         }
     }
-
 }

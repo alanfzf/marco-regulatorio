@@ -33,7 +33,7 @@ class ItemController extends Controller
         $request->merge(['item_is_informative' => $request->has('item_is_informative')]);
         $valid = $request->validate([
             'item_title' => 'required|string|max:255',
-            'item_description' => 'nullable|string|max:255',
+            'item_description' => 'nullable|string',
             'item_is_informative' => 'required|boolean',
         ]);
 
@@ -70,7 +70,7 @@ class ItemController extends Controller
         ]);
         $valid = $request->validate([
             'item_title' => 'required|string|max:255',
-            'item_description' => 'nullable|string|max:255',
+            'item_description' => 'nullable|string',
             'item_is_informative' => 'required|boolean',
         ]);
         $item->update($valid);
@@ -83,7 +83,7 @@ class ItemController extends Controller
 
         $valid = $request->validate([
             'maturity_id' => 'required|exists:maturity_levels,id',
-            'item_comment' => 'nullable|string|max:255',
+            'item_comment' => 'nullable|string',
         ]);
 
         $item->update($valid);
@@ -100,22 +100,4 @@ class ItemController extends Controller
         $item->delete();
         return redirect(route('articles.show', ['law' => $law, 'article' => $article]));
     }
-
-
-    public function validateItems(Request $request, Law $law, Article $article, ArticleItem $item)
-    {
-
-        dd($request->all());
-        $request->validate([
-            'items' => 'required|array',
-            'items.*.item_title' => 'required|string|max:255',
-            'items.*.item_description' => 'nullable|string|max:255',
-            'items.*.item_is_informative' => 'required|boolean',
-        ]);
-
-
-    }
-
-
-
 }

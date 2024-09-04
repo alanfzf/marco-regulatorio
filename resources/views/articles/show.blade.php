@@ -32,6 +32,7 @@
                         <th>Item</th>
                         <th>Type</th>
                         <th>Compliance</th>
+                        <th>Maturity level</th>
                         <th>Manage</th>
                         @role('admin')
                             <th>View</th>
@@ -61,7 +62,9 @@
                                     @endif
                                 </label>
                             </td>
-
+                            <td>
+                                {{ $item->item_is_informative ? 'N/A' : $item->maturity->maturity_name }}
+                            </td>
                             <td>
                                 {{-- start modal --}}
                                 <label for="desc_{{ $item->id }}" class="btn btn-xs ghost">
@@ -99,22 +102,20 @@
                                                 <textarea class="textarea textarea-bordered h-24" placeholder="Place a coment here.." name="item_comment">{{ $item->item_comment }}</textarea>
                                             </label>
 
-                                            <label class="form-control">
-                                                <div class="label">
-                                                    <span class="label-text">
-                                                        <i class="fa-solid fa-clipboard-list"></i>
-                                                        Maturity level
-                                                    </span>
-                                                </div>
-                                                <select name="maturity_id" class="select select-bordered">
-                                                    <option value="1">Incomplete (0)</option>
-                                                    <option value="2">Initial (1)</option>
-                                                    <option value="3">Managed (2)</option>
-                                                    <option value="4">Defined (3)</option>
-                                                    <option value="5">Quantitatively Managed (4)</option>
-                                                    <option value="6">Optimizing (5)</option>
-                                                </select>
-                                            </label>
+                                            @php
+                                                $levels = [
+                                                    1 => 'Incomplete (0)',
+                                                    2 => 'Initial (1)',
+                                                    3 => 'Managed (2)',
+                                                    4 => 'Defined (3)',
+                                                    5 => 'Quantitatively Managed (4)',
+                                                    6 => 'Optimizing (5)'
+                                                ];
+
+                                            @endphp
+                                            <x-select title="Maturity level" id="maturity_id"
+                                                required="{{ true }}" :value="$item->maturity->id" :options="$levels"
+                                                :disabled="$item->item_is_informative" />
 
 
                                             <div class="flex justify-end mt-3">

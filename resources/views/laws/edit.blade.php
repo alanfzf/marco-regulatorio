@@ -2,22 +2,6 @@
 
 @section('main')
     {{-- TODO: maybe refactor this out of here --}}
-    @if ($errors->any())
-        <div role="alert" class="alert alert-error shadow-lg">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            <div>
-                <h3 class="font-bold">Error</h3>
-
-                @foreach ($errors->all() as $error)
-                    <ul class="list-inside list-disc">
-                        <li class="text-sm">{{ $error }}</li>
-                    </ul>
-                @endforeach
-            </div>
-        </div>
-    @endif
-
-
     <div class="flex w-full flex-col border-opacity-50">
         <div class="divider">Edit law
             <i class="fa-solid fa-gavel"></i>

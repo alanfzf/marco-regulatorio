@@ -2,6 +2,6 @@
 .env
 vendor/
 node_modules/
-public/vendor/
-public/build/
+public/vendor/*
+public/build/*
 yarn-error.log

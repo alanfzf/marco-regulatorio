@@ -2,8 +2,10 @@ import Highcharts from "highcharts"
 
 document.addEventListener("DOMContentLoaded", function () {
   const { in_complaince, non_complaince } = items
-  const maturityNames = maturity.map((item) => item.maturity_name)
-  const articleItemCounts = maturity.map((item) => item.article_item_count)
+
+  const vals = Object.values(maturity)
+  const maturityNames = vals.map((item) => item.maturity_name)
+  const articleItemCounts = vals.map((item) => item.article_item_count)
 
   const colors = [
     "#FF6347",

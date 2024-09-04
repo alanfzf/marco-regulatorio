@@ -1,4 +1,5 @@
 <section>
+    <h1 class="text-xl font-bold">Welcome, {{ auth()->user()->name }} [{{ auth()->user()->roles[0]->name }}]</h1>
     <div class="flex w-full flex-col border-opacity-50">
         <div class="divider">Law compliance</div>
     </div>
