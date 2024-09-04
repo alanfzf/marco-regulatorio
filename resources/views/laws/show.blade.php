@@ -9,6 +9,8 @@
         $non_compliance_percentage = round(($non_compliance / max($articles, 1)) * 100, 2);
     @endphp
 
+
+
     <div class="flex w-full flex-col border-opacity-50">
         <div class="divider">
             <strong>"{{ strtoupper($law->law_name) }}"</strong> compliance status

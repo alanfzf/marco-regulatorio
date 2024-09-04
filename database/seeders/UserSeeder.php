@@ -18,23 +18,33 @@ class UserSeeder extends Seeder
 
         $users = [
             [
-                'name' => 'Alan',
-                'email' => 'alandavidg13@gmail.com',
+                'name' => 'Admin Fintech',
+                'email' => 'admin@fintech.com',
                 'role' => 'admin',
             ],
             [
-                'name' => 'Executive',
-                'email' => 'executive@gmail.com',
+                'name' => 'Executive Fintech',
+                'email' => 'executive@fintech.com',
                 'role' => 'executive',
             ],
             [
-                'name' => 'Auditor #1',
-                'email' => 'auditor@gmail.com',
+                'name' => 'Auditor Fintech',
+                'email' => 'auditor@fintech.com',
                 'role' => 'auditor',
             ],
             [
-                'name' => 'Auditor #2',
-                'email' => 'auditor2@gmail.com',
+                'name' => 'Admin Bank',
+                'email' => 'admin@bank.com',
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Executive Bank',
+                'email' => 'executive@bank.com',
+                'role' => 'executive',
+            ],
+            [
+                'name' => 'Auditor Bank',
+                'email' => 'auditor@bank.com',
                 'role' => 'auditor',
             ],
         ];

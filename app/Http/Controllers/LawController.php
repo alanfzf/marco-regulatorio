@@ -139,11 +139,7 @@ class LawController extends Controller
             'items',
             'items as informative_items_count' => function ($query) {
                 $query->where('item_is_informative', true);
-            },
-
-
-            ])
-            ->load(['articles' => function ($query) {
+            }])->load(['articles' => function ($query) {
                 // load the article items and their stats
                 $query->withCount([
                     'items as all_items_count',

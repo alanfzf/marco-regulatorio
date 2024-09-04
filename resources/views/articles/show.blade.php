@@ -32,6 +32,7 @@
                         <th>Item</th>
                         <th>Type</th>
                         <th>Compliance</th>
+                        <th>Maturity level</th>
                         <th>Manage</th>
                         @role('admin')
                             <th>View</th>
@@ -61,7 +62,9 @@
                                     @endif
                                 </label>
                             </td>
-
+                            <td>
+                                {{ $item->item_is_informative ? 'N/A' : $item->maturity->maturity_name }}
+                            </td>
                             <td>
                                 {{-- start modal --}}
                                 <label for="desc_{{ $item->id }}" class="btn btn-xs ghost">
