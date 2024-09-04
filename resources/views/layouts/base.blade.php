@@ -15,6 +15,20 @@
 
 {{-- contenido principal para toda la app --}}
 @section('content')
+    @if ($errors->any())
+        <div role="alert" class="alert alert-error shadow-lg">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <div>
+                <h3 class="font-bold">Error</h3>
+
+                @foreach ($errors->all() as $error)
+                    <ul class="list-inside list-disc">
+                        <li class="text-sm">{{ $error }}</li>
+                    </ul>
+                @endforeach
+            </div>
+        </div>
+    @endif
     @yield('main')
 @endsection
 
