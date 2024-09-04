@@ -187,16 +187,21 @@ class LawController extends Controller
             })
             ->groupBy('maturity_levels.maturity_name')
             ->orderBy('maturity_levels.maturity_level')
-            ->get()->toArray();
+           ->get()
+            ->keyBy('maturity_name') // Convert to associative array using maturity_name as key
+            ->toArray();
 
         $allMaturityLevels = MaturityLevel::orderBy('maturity_level')
             ->get(['maturity_name'])
-            ->map(function ($item) {
-                return ['maturity_name' => $item->maturity_name, 'article_item_count' => 0];
-            })
-            ->toArray();
+            ->mapWithKeys(function ($item) {
+                return [$item->maturity_name => ['maturity_name' => $item->maturity_name, 'article_item_count' => 0]];
+            })->toArray();
 
-        $maturityLevels = array_replace($allMaturityLevels, $maturityLevels);
+
+        $maturityLevels = array_merge($allMaturityLevels, $maturityLevels);
+
+
+
         return view('laws.report', compact('law', 'avgMaturity', 'maturityLevels'));
     }
 
