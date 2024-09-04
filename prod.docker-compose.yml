@@ -34,7 +34,7 @@ services:
         - certbot:/etc/letsencrypt
         - certbot:/var/www/certbot
       environment:
-        - APP_URL=${NGINX_URL}
+        - NGINX_URL=${NGINX_URL}
         - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
       networks:
         - marco-regulatorio
