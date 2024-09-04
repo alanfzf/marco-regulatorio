@@ -32,7 +32,7 @@
 
                 </div>
             </h2>
-            <p>
+            <p class="line-clamp-3">
                 {{ $law['law_description'] ?? '---' }}
             </p>
             <div class="card-actions justify-end">
