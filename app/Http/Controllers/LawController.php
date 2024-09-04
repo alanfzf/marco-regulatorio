@@ -246,7 +246,8 @@ class LawController extends Controller
 
         DB::transaction(function () use ($articles, $law) {
 
-            $law->articles()->delete();
+            $law->articles()->forceDelete();
+
             foreach($articles as $article) {
                 // CREATE THE ARTICLE
                 $art = new Article();
