@@ -13,6 +13,8 @@
         $art_not_comp_perc = round(($art_not_comp / max($art_total, 1)) * 100, 2);
         $informative_items = $law->informative_items_count;
         $total_items = $law->items_count;
+        $non_informative = $total_items - $informative_items;
+        $perc_non_informative = round(($non_informative / max($total_items, 1)) * 100, 2);
         $informative_perc = round(($informative_items / max($total_items, 1)) * 100, 2);
 
         $levels = [
@@ -28,10 +30,9 @@
         $levelName = $levels[$avgNearest] ?? 'Incomplete';
     @endphp
 
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-3">
         <h1 class="text-xl font-bold">Metrics</h1>
         <a href="{{ route('laws.show', ['law' => $law]) }}" class="btn btn-neutral btn-sm">Go back</a>
-
     </div>
 
 
@@ -65,6 +66,15 @@
                 <div class="stat-desc">{{ $informative_perc }}% of items</div>
             </div>
         </div>
+
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Non informative items</div>
+                <div class="font-bold text-neutral">{{ $non_informative }}</div>
+                <div class="stat-desc">{{ $perc_non_informative }}% of items</div>
+            </div>
+        </div>
+
         <div class="stats shadow">
             <div class="stat">
                 <div class="stat-title">Total items</div>
