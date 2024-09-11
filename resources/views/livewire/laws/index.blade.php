@@ -1,5 +1,17 @@
 <section>
-    <h1 class="text-xl font-bold">Welcome, {{ auth()->user()->name }} [{{ auth()->user()->roles[0]->name }}]</h1>
+    @php
+        $user = auth()->user();
+    @endphp
+
+
+
+    <h1 class="text-xl font-bold">Welcome, {{ $user->name }} </h1>
+    <h2 class="text-sm"><i class="fa-solid fa-id-badge"></i> <strong>Role:</strong> {{ $user->roles[0]->name }}</h2>
+    <h2 class="text-sm"><i class="fa-solid fa-building"></i> <strong>Company:</strong>
+        {{ $user->company->company_name }}
+    </h2>
+
+
     <div class="flex w-full flex-col border-opacity-50">
         <div class="divider">Law compliance</div>
     </div>
