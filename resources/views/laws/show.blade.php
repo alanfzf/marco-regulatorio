@@ -53,7 +53,7 @@
             <div class="flex flex-row justify-between mb-3">
                 <h2 class="text-center font-bold"><i class="fa-solid fa-newspaper"></i> Articles </h2>
 
-                @role('admin')
+                @role('admin|auditor')
                     <label for="create_article" class="btn btn-xs ghost">
                         <i class="fa-solid fa-plus"></i>
                         <span class="max-sm:hidden">
@@ -69,7 +69,7 @@
                                 @csrf
                                 <input type="text" class="input input-bordered w-full input-sm" name="article_name"
                                     required />
-                                <button type="submit" class="btn btn-primary btn-sm mt-3">Create new law</button>
+                                <button type="submit" class="btn btn-primary btn-sm mt-3">Create new article</button>
                             </form>
                         </div>
                         <label class="modal-backdrop" for="create_article">Close</label>

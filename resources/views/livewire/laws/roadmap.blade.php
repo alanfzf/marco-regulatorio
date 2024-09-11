@@ -117,6 +117,15 @@
                                             </div>
                                             <textarea class="textarea textarea-bordered h-48" disabled>{{ $item['item_comment'] }}</textarea>
                                         </label>
+
+                                        @if ($item->item_evidence)
+                                            <div class="mt-3">
+                                                <a class="link link-primary"
+                                                    href="{{ Utils::storageFile($item->item_evidence) }}"
+                                                    target="_blank">Visualizar evidencia</a>
+                                            </div>
+                                        @endif
+
                                     </div>
                                     <label class="modal-backdrop" for="desc_{{ $item['id'] }}">Close</label>
                                 </div>

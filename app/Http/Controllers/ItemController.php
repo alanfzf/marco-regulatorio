@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\ArticleItem;
 use App\Models\Law;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -84,8 +85,16 @@ class ItemController extends Controller
         $valid = $request->validate([
             'maturity_id' => 'required|exists:maturity_levels,id',
             'item_comment' => 'nullable|string',
+            'item_evidence' => 'nullable|file',
         ]);
 
+        $filePath = null;
+
+        if($request->hasFile("item_evidence")) {
+            $filePath = $request->file('item_evidence')->store('evidence');
+        }
+
+        $valid['item_evidence'] = $filePath;
         $item->update($valid);
 
         return redirect(route('articles.show', ['law' => $law, 'article' => $article]));

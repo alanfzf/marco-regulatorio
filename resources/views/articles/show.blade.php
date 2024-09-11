@@ -9,7 +9,7 @@
     <div class="mb-3 flex justify-end gap-3">
 
         <a href="{{ route('laws.show', ['law' => $law]) }}" class="btn btn-neutral btn-sm">Go back</a>
-        @role('admin')
+        @role('admin|auditor')
             <a href="{{ route('items.create', ['law' => $law, 'article' => $article]) }}" class="btn btn-sm btn-success">
                 Create new item
             </a>
@@ -34,7 +34,7 @@
                         <th>Compliance</th>
                         <th>Maturity level</th>
                         <th>Manage</th>
-                        @role('admin')
+                        @role('admin|auditor')
                             <th>View</th>
                         @endrole
                     </tr>
@@ -87,7 +87,7 @@
                                         </h4>
                                         <textarea class="textarea w-full" placeholder="Bio" disabled> {{ $item->item_description }} </textarea>
 
-                                        <form method="POST" enctype="multipart-form/data"
+                                        <form method="POST" enctype="multipart/form-data"
                                             action="{{ route('items.comment', ['law' => $law, 'article' => $article, 'item' => $item]) }}">
                                             @csrf
                                             @method('PATCH')
@@ -99,7 +99,8 @@
                                                         Comment:
                                                     </span>
                                                 </div>
-                                                <textarea class="textarea textarea-bordered h-24" placeholder="Place a coment here.." name="item_comment">{{ $item->item_comment }}</textarea>
+                                                <textarea class="textarea textarea-bordered h-24" placeholder="Place a coment here.." name="item_comment"
+                                                    {{ $item->item_is_informative ? 'disabled' : '' }}>{{ $item->item_comment }}</textarea>
                                             </label>
 
                                             @php
@@ -118,6 +119,26 @@
                                                 :disabled="$item->item_is_informative" />
 
 
+                                            <label class="form-control w-full max-w-xs">
+                                                <div class="label">
+                                                    <span class="label-text">Evidence</span>
+                                                </div>
+                                                <input id="item_evidence" name="item_evidence" type="file"
+                                                    class="file-input file-input-bordered w-full max-w-xs"
+                                                    {{ $item->item_is_informative ? 'disabled' : '' }} />
+                                            </label>
+
+                                            @if ($item->item_evidence)
+                                                <div class="mt-3">
+                                                    <a class="link link-primary"
+                                                        href="{{ Utils::storageFile($item->item_evidence) }}"
+                                                        target="_blank">Visualizar evidencia</a>
+                                                </div>
+                                            @endif
+
+
+
+
                                             <div class="flex justify-end mt-3">
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                             </div>
@@ -129,7 +150,7 @@
                                 {{-- end modal --}}
                             </td>
 
-                            @role('admin')
+                            @role('admin|auditor')
                                 <td>
                                     <a class="btn btn-xs ghost"
                                         href="{{ route('items.edit', ['law' => $law, 'article' => $article, 'item' => $item]) }}">
