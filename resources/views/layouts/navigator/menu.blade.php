@@ -41,6 +41,11 @@
                     <li>
                         <a href="{{ route('users.index') }}">Users <i class="fa-solid fa-user"></i></a>
                     </li>
+
+                    <li>
+                        <a href="{{ route('companies.index') }}">Companies <i class="fa-solid fa-building"></i></a>
+                    </li>
+
                     <li>
                         <a href="{{ route('teams.show') }}">Team <i class="fa-solid fa-users"></i></a>
                     </li>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LawController;
 use App\Http\Controllers\TeamController;
@@ -19,10 +20,14 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('loogut', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
+// **** RUTA PARA COMPANIES *****
+Route::resource('companies', CompanyController::class)
+    ->middleware(['auth', 'role:admin'])
+    ->names('companies');
 
 // **** RUTA PARA USUARIOS *****
 Route::resource('users', UserController::class)
-    ->middleware('auth')
+    ->middleware(['auth', 'role:admin'])
     ->names('users');
 
 
