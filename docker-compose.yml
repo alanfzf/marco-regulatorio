@@ -1,7 +1,7 @@
 services:
   # LARAVEL CONTAINER
   laravel: &laravel
-    image: alanfzf/laravel-dev:arm
+    image: alanfzf/laravel-dev:latest
     tty: true
     ports:
       - "8000:80"
@@ -17,7 +17,7 @@ services:
       - marco-regulatorio
     healthcheck:
       test: ["CMD", "test", "-f", "/tmp/fs_ok.lock"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
   # QUEUE CONTAINER
