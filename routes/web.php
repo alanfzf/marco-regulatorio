@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\LawController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,6 +20,13 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 
+// **** RUTA PARA USUARIOS *****
+Route::resource('users', UserController::class)
+    ->middleware('auth')
+    ->names('users');
+
+
+// **** RUTA PARA TEAMS *****
 Route::group(['prefix' => 'teams', 'middleware' => ['auth', 'role:admin']], function () {
     // show all laws here.
     Route::get('show', [TeamController::class, 'show'])

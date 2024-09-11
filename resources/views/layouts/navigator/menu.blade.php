@@ -39,6 +39,9 @@
                         <a href="{{ route('laws.index') }}"> Law list <i class="fa-solid fa-scale-balanced"></i></a>
                     </li>
                     <li>
+                        <a href="{{ route('users.index') }}">Users <i class="fa-solid fa-user"></i></a>
+                    </li>
+                    <li>
                         <a href="{{ route('teams.show') }}">Team <i class="fa-solid fa-users"></i></a>
                     </li>
                 </ul>
