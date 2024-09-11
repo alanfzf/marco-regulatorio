@@ -8,7 +8,7 @@
     <h1 class="text-xl font-bold">Welcome, {{ $user->name }} </h1>
     <h2 class="text-sm"><i class="fa-solid fa-id-badge"></i> <strong>Role:</strong> {{ $user->roles[0]->name }}</h2>
     <h2 class="text-sm"><i class="fa-solid fa-building"></i> <strong>Company:</strong>
-        {{ $user->company->company_name }}
+        {{ $user?->company?->company_name ?? 'N/A' }}
     </h2>
 
 
