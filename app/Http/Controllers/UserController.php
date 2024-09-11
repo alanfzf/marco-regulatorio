@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +24,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        return view('users.create', compact('roles'));
+        $roles = Role::pluck('name', 'id')->toArray();
+        $companies = Company::pluck('company_name', 'id')->toArray();
+
+        return view('users.create', compact('roles', 'companies'));
     }
 
     /**
@@ -37,6 +40,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|numeric',
+            'company_id' => 'required|numeric'
         ]);
 
         DB::transaction(function () use ($valid) {
@@ -62,15 +66,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $allRoles = Role::all();
-        $roles = [];
-
-        foreach ($allRoles as $item) {
-            $roles[$item['id']] = $item['name'];
-        }
-
+        $roles = Role::pluck('name', 'id')->toArray();
+        $companies = Company::pluck('company_name', 'id')->toArray();
         $user->load('roles');
-        return view('users.edit', compact('user', 'roles'));
+        return view('users.edit', compact('user', 'roles', 'companies'));
     }
 
     /**
@@ -80,9 +79,14 @@ class UserController extends Controller
     {
         $valid = $request->validate([
             'name' => 'required|string',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|numeric',
+            'company_id' => 'required|numeric'
         ]);
+
+        if (is_null($valid['password'])) {
+            unset($valid['password']);
+        }
 
         DB::transaction(function () use ($user, $valid) {
             $role = Role::findById($valid['role']);

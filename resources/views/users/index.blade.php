@@ -28,7 +28,7 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->roles[0]->name }}</td>
                         <td>
-                            <a href="{{ route('users.edit', ['user' => $user]) }}" class="btn btn-primary">Manage</a>
+                            <a href="{{ route('users.edit', ['user' => $user]) }}" class="btn btn-xs btn-primary">Manage</a>
                         </td>
                     </tr>
                 @endforeach

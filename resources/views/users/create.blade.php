@@ -5,15 +5,6 @@
         Users
     </div>
 
-    @php
-        $selectRoles = [];
-
-        foreach ($roles as $item) {
-            $selectRoles[$item['id']] = $item['name'];
-        }
-
-    @endphp
-
     <form action="{{ route('users.store') }}" method="POST">
         @csrf
 
@@ -45,11 +36,13 @@
                 <input name="password_confirmation" type="password" placeholder="Type here"
                     class="input input-bordered w-full" />
             </label>
-            <x-select id="role" title="Role" :required="true" :options="$selectRoles" />
+            <x-select id="role" title="Role" :required="true" :options="$roles" />
+            <x-select id="company_id" title="Company" :required="true" :options="$companies" />
         </div>
 
         <div class="mt-3">
             <button type="submit" class="btn btn-primary">Create user</button>
+            <a href="{{ route('users.index') }}" class="btn btn-neutral">Go back</a>
         </div>
     </form>
 @endsection
