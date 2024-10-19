@@ -31,6 +31,9 @@ Route::resource('users', UserController::class)
     ->names('users');
 
 
+
+
+
 // **** RUTA PARA TEAMS *****
 Route::group(['prefix' => 'teams', 'middleware' => ['auth', 'role:admin']], function () {
     // show all laws here.

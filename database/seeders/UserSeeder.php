@@ -62,11 +62,11 @@ class UserSeeder extends Seeder
         ];
 
         DB::transaction(function () use ($users, $roles) {
-            foreach($roles as $role) {
+            foreach ($roles as $role) {
                 $roles = Role::updateOrCreate($role);
             }
 
-            foreach($users as $user) {
+            foreach ($users as $user) {
                 $role = $user['role'];
                 unset($user['role']);
                 $user = User::updateOrCreate($user, [ 'password' => Hash::make('12345678')]);
