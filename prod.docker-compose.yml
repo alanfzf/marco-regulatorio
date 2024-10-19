@@ -1,0 +1,56 @@
+services:
+  # LARAVEL CONTAINER
+  laravel:
+    build:
+      context: .
+      dockerfile: ./docker/prod/Dockerfile
+    env_file:
+      - .env
+    networks:
+      - marco-regulatorio
+  # DATABASE CONTAINER
+  database:
+    image: mariadb:lts
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: marcoregulatorio
+      MYSQL_USER: marcoregulatorio
+      MYSQL_PASSWORD: marcoregulatorio
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - marco-regulatorio
+  # NGINX CONTAINER
+  nginx:
+      image: nginx:alpine
+      restart: unless-stopped
+      ports:
+        - "443:443"
+        - "80:80"
+      volumes:
+        - ./etc/nginx.conf:/etc/nginx/templates/nginx.conf.template
+        - certbot:/etc/letsencrypt
+        - certbot:/var/www/certbot
+      environment:
+        - NGINX_URL=${NGINX_URL}
+        - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
+      networks:
+        - marco-regulatorio
+  # CERTBOT CONTAINER
+  certbot:
+    profiles: ["certbot"]
+    image: certbot/certbot
+    volumes:
+      - certbot:/etc/letsencrypt
+      - certbot:/var/www/certbot
+    command: certonly --standalone -w /var/www/certbot --email alandavidg13@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d ${NGINX_URL}
+    ports:
+      - "80:80"
+networks:
+  marco-regulatorio:
+volumes:
+  laravel:
+  database:
+  certbot:

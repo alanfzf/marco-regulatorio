@@ -1,0 +1,61 @@
+services:
+  # LARAVEL CONTAINER
+  laravel: &laravel
+    image: alanfzf/laravel-dev:latest
+    tty: true
+    ports:
+      - "8000:80"
+      - "2222:2222"
+    env_file:
+      - .env
+    environment:
+      GIT_REPO: ${LARAVEL_REPO}
+      GIT_TOKEN: ${GIT_TOKEN}
+    volumes:
+      - laravel:/var/www/${LARAVEL_REPO}
+    networks:
+      - marco-regulatorio
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/fs_ok.lock"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+  # QUEUE CONTAINER
+  queue:
+    <<: *laravel
+    ports: []
+    command: ["/opt/scripts/entry-queue.sh"]
+    healthcheck:
+      test: []
+    depends_on:
+      laravel:
+        condition: service_healthy
+  vite:
+    <<: *laravel
+    ports:
+      - "5173:5173"
+    command: ["/opt/scripts/entry-node.sh"]
+    healthcheck:
+      test: []
+    depends_on:
+      laravel:
+          condition: service_healthy
+  # DATABASE CONTAINER
+  database:
+    image: mariadb:lts
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: marcoregulatorio
+      MYSQL_USER: marcoregulatorio
+      MYSQL_PASSWORD: marcoregulatorio
+    ports:
+      - "3306:3306"
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - marco-regulatorio
+networks:
+  marco-regulatorio:
+volumes:
+  laravel:
+  database:

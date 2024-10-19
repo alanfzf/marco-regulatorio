@@ -1,0 +1,7 @@
+.git/
+.env
+vendor/
+node_modules/
+public/vendor/*
+public/build/*
+yarn-error.log
