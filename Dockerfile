@@ -41,7 +41,6 @@ WORKDIR /var/www/html/
 COPY . .
 # Copy vendor files
 COPY --from=vendor /composer/vendor/ /var/www/html/vendor
-COPY --from=vendor /composer/public/vendor/ /var/www/html/public/vendor
 # Copy node files
 COPY --from=node /node/public/build /var/www/html/public/build
 # Copy php ini dir
