@@ -21,7 +21,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if(Auth::attempt($valid)) {
+        if (Auth::attempt($valid)) {
             return redirect(route('home'))->with('Bienvenido');
         }
 

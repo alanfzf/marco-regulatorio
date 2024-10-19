@@ -90,7 +90,7 @@ class ItemController extends Controller
 
         $filePath = null;
 
-        if($request->hasFile("item_evidence")) {
+        if ($request->hasFile("item_evidence")) {
             $filePath = $request->file('item_evidence')->store('evidence');
         }
 

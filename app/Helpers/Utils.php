@@ -5,7 +5,7 @@ class Utils
 {
     public static function storageFile($url)
     {
-        if(!$url) {
+        if (!$url) {
             return null;
         }
 

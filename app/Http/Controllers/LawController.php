@@ -48,7 +48,7 @@ class LawController extends Controller
             'law_image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        if($request->hasFile('law_image')) {
+        if ($request->hasFile('law_image')) {
             $values['law_image'] = $request->file('law_image')->store();
         }
 
@@ -104,7 +104,7 @@ class LawController extends Controller
             'law_image' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        if($request->hasFile('law_image')) {
+        if ($request->hasFile('law_image')) {
             $values['law_image'] = $request->file('law_image')->store();
         }
 
@@ -215,16 +215,16 @@ class LawController extends Controller
 
 
 
-        foreach($contents as $index => $line) {
+        foreach ($contents as $index => $line) {
             $data = str_getcsv($line);
 
-            if(count($data) !== 6) {
+            if (count($data) !== 6) {
                 throw new \Exception('Invalid CSV format, line: '. $index);
             }
 
             [$article, $title, $description, $is_informative, $comment, $level] = $data;
 
-            if(array_key_exists($article, $articles)) {
+            if (array_key_exists($article, $articles)) {
                 // push a new item to the article
                 $articles[$article]['items'][] = [
                     'name' => $title,
@@ -248,7 +248,7 @@ class LawController extends Controller
 
             $law->articles()->forceDelete();
 
-            foreach($articles as $article) {
+            foreach ($articles as $article) {
                 // CREATE THE ARTICLE
                 $art = new Article();
                 $art->article_name = $article['name'];
@@ -257,7 +257,7 @@ class LawController extends Controller
                 $art->save();
 
                 $articleItems = [];
-                foreach($article['items'] as $item) {
+                foreach ($article['items'] as $item) {
                     $maturity = MaturityLevel::where('maturity_level', $item['level'])
                         ->firstOrFail();
                     $it = new ArticleItem();
