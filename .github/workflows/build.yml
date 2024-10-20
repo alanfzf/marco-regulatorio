@@ -1,4 +1,4 @@
-name: Build and push image
+name: build-docker-hub
 on:
   push:
     branches: ['main']

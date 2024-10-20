@@ -1,6 +1,7 @@
 services:
   # LARAVEL CONTAINER
   laravel:
+    image: alanfzf/marco-regulatorio:latest
     build:
       context: .
     env_file:

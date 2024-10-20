@@ -1,0 +1,21 @@
+name: publish-test
+on:
+  workflow_run:
+    workflows: [build-docker-hub]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: install ssh keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_TEST_KEY }}" > ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.SSH_TEST_HOST }} > ~/.ssh/known_hosts
+
+      - name: connect and execute deploy script
+        run: |
+          ssh ${{ secrets.SSH_TEST_USER }}@${{ secrets.SSH_TEST_HOST }} "cd ${{ secrets.SSH_TEST_WORKDIR }} && bash deploy.sh && exit"
